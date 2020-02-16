@@ -1,0 +1,51 @@
+﻿using Awv.Games.WoW.Items;
+using Awv.Games.WoW.Stats;
+using SixLabors.ImageSharp.PixelFormats;
+
+namespace Awv.Games.WoW.Tooltips
+{
+    public static class TooltipColors
+    {
+        public static readonly Rgba32 Poor = new Rgba32(157, 157, 157);
+        public static readonly Rgba32 Common = new Rgba32(255, 255, 255);
+        public static readonly Rgba32 Uncommon = new Rgba32(30, 255, 0);
+        public static readonly Rgba32 Rare = new Rgba32(0, 112, 221);
+        public static readonly Rgba32 Epic = new Rgba32(147, 69, 255);
+        public static readonly Rgba32 Legendary = new Rgba32(255, 128, 0);
+        public static readonly Rgba32 Artifact = new Rgba32(153, 136, 86);
+        public static readonly Rgba32 Token = new Rgba32(0, 112, 144);
+        public static readonly Rgba32 Flavor = new Rgba32(255, 209, 0);
+        public static readonly Rgba32 ItemType = new Rgba32(102, 187, 255);
+        public static readonly Rgba32 Corruption = new Rgba32(132, 97, 185);
+
+        public static readonly Rgba32 FillDefault = new Rgba32(1, 6, 26);
+        public static readonly Rgba32 FillCorrupted = new Rgba32(13, 13, 26);
+        public static readonly Rgba32 FillAzerite = new Rgba32(15, 20, 28);
+
+        public static Rgba32 ToColor(this ItemRarity rarity)
+        {
+            switch (rarity)
+            {
+                case ItemRarity.Poor: return Poor;
+                case ItemRarity.Common: return Common;
+                case ItemRarity.Uncommon: return Uncommon;
+                case ItemRarity.Rare: return Rare;
+                case ItemRarity.Epic: return Epic;
+                case ItemRarity.Legendary: return Legendary;
+            }
+            return Common;
+        }
+
+        public static Rgba32 ToColor(this StatType statType)
+        {
+            switch(statType)
+            {
+                case StatType.Primary: return Common;
+                case StatType.Secondary: return Uncommon;
+                case StatType.Tertiary: return Uncommon;
+                case StatType.Corruption: return Corruption;
+            }
+            return Common;
+        }
+    }
+}
