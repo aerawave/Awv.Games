@@ -24,6 +24,8 @@ Input on modification (with sources) would be appreciated.
     - `Minimum` - `Max` Damage --- `Speed` - https://classic.wowhead.com/item=13262
     - `Minimum` - `Maximum` `Element` Damage --- `Speed` - https://classic.wowhead.com/item=13262
     - (`DPS` damage per second) - https://classic.wowhead.com/item=13262
+- *armor only*
+    - `Armor`
 - *equipment only*
     - `Stats` - https://www.wowhead.com/item=49623
     - `Artifact Relic Slots` - https://www.wowhead.com/item=128872
