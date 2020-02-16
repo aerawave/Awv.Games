@@ -21,7 +21,7 @@ namespace Awv.Games.WoW.Graphics
         public override void Retile()
         {
             base.Retile();
-            Padding = new SizeF((float)TileSize / 2, (float)TileSize / 2);
+            Padding = new SizeF((float)TileSize * .5f, (float)TileSize * .5f);
 
             Tiles[2].Mutate(x => x.Rotate(90f));
             Tiles[3].Mutate(x => x.Rotate(90f));

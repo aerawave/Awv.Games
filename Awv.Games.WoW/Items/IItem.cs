@@ -1,4 +1,5 @@
 ﻿using Awv.Games.Currency;
+using Awv.Games.WoW.Items.Effects;
 using Awv.Games.WoW.Levels.Interface;
 using Awv.Games.WoW.Tooltips.Interface;
 using System;
@@ -8,7 +9,14 @@ namespace Awv.Games.WoW.Items
 {
     public interface IItem : ITooltip
     {
+        string GetName();
         IItemLevel GetItemLevel();
+        string GetBindsOn();
+        /// <summary>
+        /// Ex: "Unique-Equipped"
+        /// </summary>
+        /// <returns></returns>
+        string GetUniqueness();
         IPlayerLevel GetRequiredLevel();
         string GetFlavor();
         /// <summary>
@@ -22,23 +30,17 @@ namespace Awv.Games.WoW.Items
         /// <returns></returns>
         string GetItemType();
         /// <summary>
-        /// Ex: "Unique-Equipped"
-        /// </summary>
-        /// <returns></returns>
-        string GetUniqueness();
-        /// <summary>
         /// Ex: "Titanforged" / "Warforged"
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> GetSpecialItemFlags();
-        IEnumerable<string> GetUses();
-        IEnumerable<string> GetEquipEffects();
+        IEnumerable<IEffect> GetEffects();
         ItemRarity GetRarity();
         uint GetMaxStack();
-        string GetBindsOn();
         TimeSpan? GetDuration();
         CurrencyCount GetSellPrice();
         int GetDurability();
         bool HasDurability();
+        bool IsCorrupted();
     }
 }

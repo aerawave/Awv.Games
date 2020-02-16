@@ -1,4 +1,6 @@
-﻿using Awv.Games.WoW.Tooltips;
+﻿using Awv.Games.WoW.Items.Effects;
+using Awv.Games.WoW.Items.Equipment.Interface;
+using Awv.Games.WoW.Tooltips;
 using Awv.Games.WoW.Tooltips.Interface;
 
 namespace Awv.Games.WoW.Items.Equipment
@@ -9,7 +11,7 @@ namespace Awv.Games.WoW.Items.Equipment
 
         public override ITooltipSegment GetCoreSegment()
         {
-            var segment = new TooltipSegment();
+            var segment = base.GetCoreSegment() as TooltipSegment;
 
             segment.LeftTexts.Add($"{GetArmorPoints()} Armor");
 

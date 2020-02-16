@@ -1,37 +1,55 @@
-﻿using Awv.Games.Stats;
+﻿using Awv.Games.WoW.Items.Effects;
+using Awv.Games.WoW.Items.Equipment.Interface;
 using Awv.Games.WoW.Stats;
 using Awv.Games.WoW.Tooltips;
 using Awv.Games.WoW.Tooltips.Interface;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Awv.Games.WoW.Items.Equipment
 {
     public class Equipment : Item, IEquipment
     {
+        public string MultiPieceName { get; set; }
         public List<IWoWStat> Stats { get; set; } = new List<IWoWStat>();
+        public List<EquipEffect> EquipEffects { get; set; } = new List<EquipEffect>();
         public EquipmentType Type { get; set; }
 
         public bool HasStat(string name) => Stats.Any(stat => stat.GetName() == name);
 
-        public override ITooltipSegment GetUpperSegment()
+        public override IEnumerable<ITooltipSegment> GetSegments()
         {
-            var segment = base.GetUpperSegment() as TooltipSegment;
-            segment.Level();
+            var segments = new List<ITooltipSegment>();
+            var upper = GetUpperSegment();
+            var core = GetCoreSegment();
+            var stats = GetStatsSegment();
+            var effects = GetEffectsSegment();
+            var lower = GetLowerSegment();
+
+            segments.Add(upper);
+
+            segments.Add(core);
+            segments.Add(stats);
+            segments.Add(effects);
+
+            segments.Add(lower);
+
+            return segments;
+        }
+
+        public override ITooltipSegment GetCoreSegment()
+        {
+            var segment = new TooltipSegment();
 
             if (Type != null)
-            {
                 segment.LeftTexts.Add(Type.Slot);
-                if (Type.Definition.Name != null)
-                    segment.RightTexts.Add(Type.Definition.Name);
-            }
+            if (Type?.Definition?.Name != null)
+                segment.RightTexts.Add(Type.Definition.Name);
 
             return segment;
         }
 
-        public override ITooltipSegment GetLowerSegment()
+        public virtual ITooltipSegment GetStatsSegment()
         {
             var segment = new TooltipSegment();
             var primaryStats = Stats.Where(stat => stat.GetStatType() == StatType.Primary).ToList();
@@ -42,22 +60,30 @@ namespace Awv.Games.WoW.Items.Equipment
             primaryStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.Common)));
             secondaryStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon)));
             tertiaryStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon)));
-            corruptionStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.Corruption)));
+            corruptionStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.CorruptEffect)));
 
-            // indestructible ?
+            // artifact relic slots
 
-            var baseSegment = base.GetLowerSegment() as TooltipSegment;
-            baseSegment.Level();
+            // gem sockets
+            // socket bonus
 
-            baseSegment.LeftTexts.ForEach(text => segment.LeftTexts.Add(text));
-            baseSegment.RightTexts.ForEach(text => segment.RightTexts.Add(text));
+            var durability = Durability;
+            if (HasDurability())
+                segment.LeftTexts.Add($"Durability {durability} / {durability}");
+
+            // class restrictions
 
             return segment;
         }
 
+        public override IEnumerable<IEffect> GetEffects() => EquipEffects.Concat(base.GetEffects()).ToArray();
         public EquipmentType GetEquipmentType() => Type;
         public IEnumerable<IWoWStat> GetStats() => Stats;
 
-        protected override bool IsCorrupted() => Stats.Any(stat => stat.GetStatType() == StatType.Corruption);
+        public override bool IsCorrupted() => Stats.Any(stat => stat.GetStatType() == StatType.Corruption);
+
+        public string GetMultiPieceName() => MultiPieceName;
+
+        public bool IsMultiEquipment() => !string.IsNullOrWhiteSpace(MultiPieceName);
     }
 }

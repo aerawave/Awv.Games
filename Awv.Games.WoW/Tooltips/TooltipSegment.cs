@@ -19,5 +19,15 @@ namespace Awv.Games.WoW.Tooltips
             while (RightTexts.Count < LeftTexts.Count)
                 RightTexts.Add(TooltipText.Empty);
         }
+
+        public void Append(ITooltipSegment segment, bool levelFirst = true)
+        {
+            if (levelFirst) Level();
+            var lefts = segment.GetLeftTexts();
+            var rights = segment.GetRightTexts();
+
+            foreach (var left in lefts) LeftTexts.Add(left);
+            foreach (var right in rights) RightTexts.Add(right);
+        }
     }
 }

@@ -22,30 +22,29 @@ namespace Awv.Games.WoW.Graphics
         public FontFamily FontFamily { get; set; }
         public Image<Rgba32> Emblem { get; set; }
         public int EmblemAnchorY { get; set; }
-        public float Scale { get; set; } = 1f;
 
         public BorderSource Border { get; set; } = new BorderSource();
         public BorderSource Fill { get; set; } = new BorderSource();
         public CurrencySource Currency { get; set; } = new CurrencySource();
         public Rgba32 FillColor { get; set; }
 
-        public Image<Rgba32> Generate(ITooltip tooltip)
+        public Image<Rgba32> Generate(ITooltip tooltip, float scale)
         {
             if (FontFamily == null)
                 FontFamily = SystemFonts.Families.First(family => family.Name == "Verdana");
 
-            var titleRenderer = new RendererOptions(new Font(FontFamily, Scale * 12f));
-            var contentRenderer = new RendererOptions(new Font(FontFamily, Scale * 10f));
+            var titleRenderer = new RendererOptions(new Font(FontFamily, scale * 12f));
+            var contentRenderer = new RendererOptions(new Font(FontFamily, scale * 10f));
             var wrappedContentRenderer = new RendererOptions(contentRenderer.Font);
             var wrapping = new TextGraphicsOptions { WrapTextWidth = wrappedContentRenderer.WrappingWidth };
 
-            var titlePadding = Scale * 96f;
+            var titlePadding = scale * 96f;
 
             var title = tooltip.GetTitle();
             var titleSize = TextMeasurer.Measure(title.Text, titleRenderer);
 
-            var tooltipPadding = Border.Padding * Scale;
-            var textPadding = new SizeF(12f * Scale, 2f * Scale);
+            var tooltipPadding = Border.Padding * scale;
+            var textPadding = new SizeF(12f * scale, 2f * scale);
 
             var lines = tooltip.GetLines().ToList();
 
@@ -55,9 +54,9 @@ namespace Awv.Games.WoW.Graphics
             {
                 if (line.LeftText.Type == TooltipTextType.Currency && Currency.Source != null)
                 {
-                    var regexGold = new Regex(@"\d+g");
-                    var regexSilver = new Regex(@"\d{1,2}s");
-                    var regexCopper = new Regex(@"\d{1,2}c");
+                    var regexGold = new Regex(@"(\d+)(g)");
+                    var regexSilver = new Regex(@"(\d{1,2})(s)");
+                    var regexCopper = new Regex(@"(\d{1,2})(c)");
 
                     var text = line.LeftText.Text;
 
@@ -106,11 +105,10 @@ namespace Awv.Games.WoW.Graphics
 
             var height = titleSize.Height + lineSizes.Sum(line => line.Height) + lineSizes.Count * textPadding.Height;
 
-            width += tooltipPadding.Width;
-            height += tooltipPadding.Height;
-            height += textPadding.Height * 3f;
+            width += tooltipPadding.Width * 2;
+            height += tooltipPadding.Height * 2;
 
-            var gen = GenerateBackground((int)width, (int)height);
+            var gen = GenerateBackground((int)width, (int)height, scale);
 
             gen.Mutate(img =>
             {
@@ -147,11 +145,11 @@ namespace Awv.Games.WoW.Graphics
                                     var silver = Currency.Silver.Clone();
                                     var copper = Currency.Copper.Clone();
 
-                                    gold.Mutate(x => x.Resize(new Size((int)(Scale * gold.Width), (int)(Scale * gold.Height))));
-                                    silver.Mutate(x => x.Resize(new Size((int)(Scale * silver.Width), (int)(Scale * silver.Height))));
-                                    copper.Mutate(x => x.Resize(new Size((int)(Scale * copper.Width), (int)(Scale * copper.Height))));
+                                    gold.Mutate(x => x.Resize(new Size((int)(scale * gold.Width), (int)(scale * gold.Height))));
+                                    silver.Mutate(x => x.Resize(new Size((int)(scale * silver.Width), (int)(scale * silver.Height))));
+                                    copper.Mutate(x => x.Resize(new Size((int)(scale * copper.Width), (int)(scale * copper.Height))));
 
-                                    var tilesizeOffset = (int)(Scale * Currency.TileSize / 4);
+                                    var tilesizeOffset = (int)(scale * Currency.TileSize / 4);
                                     if (left.Text.Contains((goldsymbol)))
                                     {
                                         var goldx = TextMeasurer.Measure(left.Text.Substring(0, left.Text.IndexOf(goldsymbol)), contentRenderer).Width - tilesizeOffset;
@@ -185,26 +183,26 @@ namespace Awv.Games.WoW.Graphics
             return gen;
         }
 
-        public Image<Rgba32> GenerateBackground(int width, int height)
+        public Image<Rgba32> GenerateBackground(int width, int height, float scale)
         {
             var tilesize = Border.TileSize;
-            var tileSpan = (int)((float)tilesize * 2 * Scale);
-            if (width < tileSpan) throw new ArgumentException($"{nameof(width)} must be at least {tileSpan}.");
-            if (height < tileSpan) throw new ArgumentException($"{nameof(height)} must be at least {tileSpan}.");
+            var tileSpan = (int)((float)tilesize * 2 * scale);
+            width = Math.Max(width, tileSpan);//if (width < tileSpan) throw new ArgumentException($"{nameof(width)} must be at least {tileSpan}.");
+            height = Math.Max(height, tileSpan);//if (height < tileSpan) throw new ArgumentException($"{nameof(height)} must be at least {tileSpan}.");
 
 
             var bg = new Image<Rgba32>(width, height);
             var fg = new Image<Rgba32>(width, height);
             var layered = new Image<Rgba32>(width, height);
 
-            var scale = new Size((int)(Border.TileSize * Scale), (int)(Border.TileSize * Scale));
-            var innerWidth = width - scale.Width * 2;
-            var innerHeight = height - scale.Height * 2;
+            var scaled = new Size((int)(Border.TileSize * scale), (int)(Border.TileSize * scale));
+            var innerWidth = width - scaled.Width * 2;
+            var innerHeight = height - scaled.Height * 2;
 
-            DrawBorder(bg, Fill, width, height);
-            DrawBorder(fg, Border, width, height);
+            DrawBorder(bg, Fill, width, height, scale);
+            DrawBorder(fg, Border, width, height, scale);
 
-            bg.Mutate(x => x.Fill(FillColor, new Rectangle(scale.Width, scale.Height, innerWidth, innerHeight)));
+            bg.Mutate(x => x.Fill(FillColor, new Rectangle(scaled.Width, scaled.Height, innerWidth, innerHeight)));
 
             layered.Mutate(x => x
                 .DrawImage(bg, new Point(0, 0), 1f)
@@ -213,34 +211,34 @@ namespace Awv.Games.WoW.Graphics
             return layered;
         }
 
-        private void DrawBorder(Image<Rgba32> target, BorderSource border, int width, int height)
+        private void DrawBorder(Image<Rgba32> target, BorderSource border, int width, int height, float scale)
         {
-            border.Rescale(Scale);
+            border.Rescale(scale);
             var tileSize = new Size(border.TileSize, border.TileSize);
-            var scale = new Size((int)(border.TileSize * Scale), (int)(border.TileSize * Scale));
-            var innerWidth = width - scale.Width * 2;
-            var innerHeight = height - scale.Height * 2;
+            var scaled = new Size((int)(border.TileSize * scale), (int)(border.TileSize * scale));
+            var innerWidth = width - scaled.Width * 2;
+            var innerHeight = height - scaled.Height * 2;
             var tilesize = border.TileSize;
 
             target.Mutate(x =>
             {
                 x.DrawImage(border.TopLeft, new Point(0, 0), 1f);
-                x.DrawImage(border.TopRight, new Point(width - scale.Width, 0), 1f);
-                x.DrawImage(border.BottomLeft, new Point(0, height - scale.Height), 1f);
-                x.DrawImage(border.BottomRight, new Point(width - scale.Width, height - scale.Height), 1f);
+                x.DrawImage(border.TopRight, new Point(width - scaled.Width, 0), 1f);
+                x.DrawImage(border.BottomLeft, new Point(0, height - scaled.Height), 1f);
+                x.DrawImage(border.BottomRight, new Point(width - scaled.Width, height - scaled.Height), 1f);
 
-                for (var ix = 0; ix < innerWidth; ix += scale.Width)
+                for (var ix = 0; ix < innerWidth; ix += scaled.Width)
                 {
-                    var scaled = new Size(Math.Min(scale.Width, innerWidth - ix), scale.Height);
-                    x.DrawImage(border.Top.Clone(xx => xx.Crop(new Rectangle(Point.Empty, scaled))), new Point(scale.Width + ix, 0), 1f);
-                    x.DrawImage(border.Bottom.Clone(xx => xx.Crop(new Rectangle(Point.Empty, scaled))), new Point(scale.Width + ix, height - scale.Height), 1f);
+                    var size = new Size(Math.Min(scaled.Width, innerWidth - ix), scaled.Height);
+                    x.DrawImage(border.Top.Clone(xx => xx.Crop(new Rectangle(Point.Empty, size))), new Point(scaled.Width + ix, 0), 1f);
+                    x.DrawImage(border.Bottom.Clone(xx => xx.Crop(new Rectangle(Point.Empty, size))), new Point(scaled.Width + ix, height - scaled.Height), 1f);
                 }
 
-                for (var iy = 0; iy < innerHeight; iy += scale.Height)
+                for (var iy = 0; iy < innerHeight; iy += scaled.Height)
                 {
-                    var scaled = new Size(scale.Width, Math.Min(scale.Height, innerHeight - iy));
-                    x.DrawImage(border.Left.Clone(xx => xx.Crop(new Rectangle(Point.Empty, scaled))), new Point(0, scale.Height + iy), 1f);
-                    x.DrawImage(border.Right.Clone(xx => xx.Crop(new Rectangle(Point.Empty, scaled))), new Point(width - scale.Width, scale.Height + iy), 1f);
+                    var size = new Size(scaled.Width, Math.Min(scaled.Height, innerHeight - iy));
+                    x.DrawImage(border.Left.Clone(xx => xx.Crop(new Rectangle(Point.Empty, size))), new Point(0, scaled.Height + iy), 1f);
+                    x.DrawImage(border.Right.Clone(xx => xx.Crop(new Rectangle(Point.Empty, size))), new Point(width - scaled.Width, scaled.Height + iy), 1f);
                 }
             });
 

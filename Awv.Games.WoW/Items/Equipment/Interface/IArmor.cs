@@ -1,4 +1,4 @@
-﻿namespace Awv.Games.WoW.Items.Equipment
+﻿namespace Awv.Games.WoW.Items.Equipment.Interface
 {
     public interface IArmor : IEquipment
     {

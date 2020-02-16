@@ -29,5 +29,15 @@ namespace Awv.Games.WoW.Items.Equipment
         {
 
         }
+
+        public class Weapon : EquipmentType
+        {
+            public Weapon(string slot, string name) : base(slot, name, "weapon") { }
+        }
+
+        public class Armor : EquipmentType
+        {
+            public Armor(string slot, string name) : base(slot, name, "armor") { }
+        }
     }
 }

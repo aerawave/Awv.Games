@@ -1,6 +1,9 @@
 ﻿using Awv.Games.Currency;
 using Awv.Games.Graphics;
 using Awv.Games.WoW.Graphics;
+using Awv.Games.WoW.Items.Effects;
+using Awv.Games.WoW.Items.Equipment.Interface;
+using Awv.Games.WoW.Levels;
 using Awv.Games.WoW.Levels.Interface;
 using Awv.Games.WoW.Tooltips;
 using Awv.Games.WoW.Tooltips.Interface;
@@ -17,8 +20,8 @@ namespace Awv.Games.WoW.Items
     public class Item : IItem
     {
         public string Name { get; set; }
-        public IItemLevel ItemLevel { get; set; }
-        public IPlayerLevel RequiredLevel { get; set; }
+        public ItemLevel ItemLevel { get; set; }
+        public PlayerLevel RequiredLevel { get; set; }
         public ItemRarity Rarity { get; set; }
         public string Flavor { get; set; }
         public string Usage { get; set; }
@@ -26,20 +29,17 @@ namespace Awv.Games.WoW.Items
         public string BindsOn { get; set; }
         public string Uniqueness { get; set; } = null;
         public List<string> SpecialItemFlags { get; set; } = new List<string>();
-        public List<string> Uses { get; set; } = new List<string>();
-        public List<string> EquipEffects { get; set; } = new List<string>();
-        // icon
+        public List<UseEffect> UseEffects { get; set; } = new List<UseEffect>();
         public IGraphic Icon { get; set; }
         public bool HasIcon => Icon != null;
         public CurrencyCount SellPrice { get; set; } = new WoWCurrency().GetCurrency(0);
         public uint MaxStack { get; set; }
-        public string Corruption { get; set; }
         public int Durability { get; set; } = 0;
         public TimeSpan? Duration { get; set; }
 
+        public string GetName() => Name;
         public string GetBindsOn() => BindsOn;
         public TimeSpan? GetDuration() => Duration;
-        public IEnumerable<string> GetEquipEffects() => EquipEffects;
         public string GetFlavor() => Flavor;
         public IItemLevel GetItemLevel() => ItemLevel;
         public string GetItemType() => ItemType;
@@ -53,9 +53,11 @@ namespace Awv.Games.WoW.Items
         {
             var segments = new List<ITooltipSegment>();
             var core = GetCoreSegment();
+            var effects = GetEffectsSegment();
 
             segments.Add(GetUpperSegment());
             if (core != null) segments.Add(core);
+            if (effects != null) segments.Add(effects);
             segments.Add(GetLowerSegment());
 
             return segments;
@@ -63,13 +65,13 @@ namespace Awv.Games.WoW.Items
 
         public IEnumerable<string> GetSpecialItemFlags() => SpecialItemFlags;
 
-        public TooltipText GetTitle() => new TooltipText(Name, TooltipColors.ToColor(Rarity));
+        public TooltipText GetTitle() => new TooltipText(GetName(), TooltipColors.ToColor(Rarity));
 
         public string GetUniqueness() => Uniqueness;
 
         public string GetUsage() => Usage;
 
-        public IEnumerable<string> GetUses() => Uses;
+        public virtual IEnumerable<IEffect> GetEffects() => UseEffects;
         public CurrencyCount GetSellPrice() => SellPrice;
         public int GetDurability() => Durability;
 
@@ -77,60 +79,103 @@ namespace Awv.Games.WoW.Items
 
         public virtual ITooltipSegment GetUpperSegment()
         {
+            var equipment = this as IEquipment;
             var list = new List<TooltipText>();
 
-            if (this.HasSpecialItemFlags()) list.Add(new TooltipText(string.Join(" ", GetSpecialItemFlags()), TooltipColors.Uncommon));
+            if (this is IEquipment && equipment.IsMultiEquipment())
+            {
+                var title = GetTitle();
+                list.Add(new TooltipText(equipment.GetMultiPieceName(), title.Color));
+            }
+
+            var flags = GetSpecialItemFlags();
+            if (flags.Count() > 0)
+                list.Add(new TooltipText(string.Join(" ", flags), TooltipColors.Lime));
 
             var usage = GetUsage();
-            if (usage != null) list.Add(new TooltipText(usage, TooltipColors.Flavor));
+            if (usage != null)
+                list.Add(new TooltipText(usage, TooltipColors.Yellow));
 
-            list.Add(new TooltipText($"Item Level {GetItemLevel().GetItemLevel()}", TooltipColors.Flavor));
+            list.Add(new TooltipText($"Item Level {GetItemLevel().GetItemLevel()}", TooltipColors.Yellow));
 
-            if (this.HasBindsOn()) list.Add(new TooltipText(GetBindsOn(), TooltipColors.Common));
-            if (this.HasUniqueness()) list.Add(new TooltipText(GetUniqueness(), TooltipColors.Common));
-            if (this.HasItemType()) list.Add(new TooltipText(GetItemType(), TooltipColors.ItemType));
+            var bindsOn = GetBindsOn();
+            if (!string.IsNullOrWhiteSpace(bindsOn))
+                list.Add(new TooltipText(bindsOn, TooltipColors.White));
+
+            var uniqueness = GetUniqueness();
+            if (!string.IsNullOrWhiteSpace(uniqueness))
+                list.Add(new TooltipText(uniqueness, TooltipColors.White));
+
+            var type = GetItemType();
+            if (!string.IsNullOrWhiteSpace(type))
+                list.Add(new TooltipText(type, TooltipColors.ItemType));
+
+            return new TooltipSegment { LeftTexts = list };
+        }
+
+        public virtual ITooltipSegment GetEffectsSegment()
+        {
+            var list = new List<TooltipText>();
+
+            var effects = GetEffects();
+
+            foreach (var effect in effects)
+                list.Add(new TooltipText($"{effect.GetOrigin()}: {effect.GetEffect()}", effect.GetColor(), TooltipTextType.Paragraph));
 
             return new TooltipSegment { LeftTexts = list };
         }
 
         public virtual ITooltipSegment GetLowerSegment()
         {
+            var equipment = this as IEquipment;
             var list = new List<TooltipText>();
 
-            var equipColor = IsCorrupted() ? TooltipColors.Corruption : TooltipColors.Uncommon;
+            var level = GetRequiredLevel();
+            if (level != null)
+                list.Add(new TooltipText($"Requires Level {level.GetLevel()}", TooltipColors.Common));
 
-
-            if (this.HasUses()) GetUses().ToList().ForEach(use => list.Add(new TooltipText($"Use: {use}", TooltipColors.Uncommon, TooltipTextType.Paragraph)));
-            if (this.HasEquipEffects()) GetEquipEffects().ToList().ForEach(equip => list.Add(new TooltipText($"Equip: {equip}", equipColor, TooltipTextType.Paragraph)));
-            if (this.HasRequiredLevel()) list.Add(new TooltipText($"Requires Level {GetRequiredLevel().GetLevel()}", TooltipColors.Common));
-
-            if (HasDurability()) list.Add($"Durability {GetDurability()} / {GetDurability()}");
-
-            if (this.HasDuration()) list.Add(new TooltipText($"Duration: {GetDuration().Value.GetTooltipDisplayString()}", TooltipColors.Common));
-            if (this.HasMaxStack()) list.Add(new TooltipText($"Max Stack: {GetMaxStack()}", TooltipColors.Common));
-
-            if (this.HasFlavor()) list.Add(new TooltipText($"\"{GetFlavor()}\"", TooltipColors.Flavor, TooltipTextType.Paragraph));
-
-            if (this.HasSellPrice())
+            if (this is IEquipment)
             {
-                var sellPrice = GetSellPrice().ToString();
-                if (string.IsNullOrWhiteSpace(sellPrice)) sellPrice = "No sell price";
-                else sellPrice = $"Sell Price: {sellPrice}";
-                list.Add(new TooltipText(sellPrice, TooltipColors.Common, TooltipTextType.Currency));
+                // set name
+                // set pieces
+                // set effects
+                
+                // also Azerite Gear
+            }
+
+            var duration = GetDuration();
+            if (duration.HasValue)
+                list.Add(new TooltipText($"Duration: {duration.Value.GetTooltipDisplayString()}", TooltipColors.Common));
+
+            var stack = GetMaxStack();
+            if (stack > 0)
+                list.Add(new TooltipText($"Max Stack: {stack}", TooltipColors.Common));
+
+            var flavor = GetFlavor();
+            if (!string.IsNullOrWhiteSpace(flavor))
+                list.Add(new TooltipText($"\"{flavor}\"", TooltipColors.Flavor, TooltipTextType.Paragraph));
+
+            var sellPrice = GetSellPrice();
+            if (sellPrice != null)
+            {
+                var sellPriceString = sellPrice.ToString();
+                if (string.IsNullOrWhiteSpace(sellPriceString)) sellPriceString = "No sell price";
+                else sellPriceString = $"Sell Price: {sellPriceString}";
+                list.Add(new TooltipText(sellPriceString, TooltipColors.Common, TooltipTextType.Currency));
             }
 
             return new TooltipSegment { LeftTexts = list };
         }
 
-        public virtual Image<Rgba32> GenerateTooltip(TooltipGenerator generator)
+        public virtual Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale)
         {
-            var tt = generator.Generate(this);
+            var tt = generator.Generate(this, scale);
 
             if (Icon != null)
             {
                 var icon = Icon.GetImage().Clone();
 
-                icon.Mutate(img => img.Resize(new Size((int)(generator.Scale * icon.Width), (int)(generator.Scale * icon.Height))));
+                icon.Mutate(img => img.Resize(new Size((int)(scale * icon.Width), (int)(scale * icon.Height))));
                 var ttwic = new Image<Rgba32>(tt.Width + icon.Width, Math.Max(tt.Height, icon.Height));
                 ttwic.Mutate(img =>
                 {
@@ -146,9 +191,9 @@ namespace Awv.Games.WoW.Items
             }
         }
 
-        public Image<Rgba32> GenerateTooltip(TooltipGenerator generator, IBrush background)
+        public Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale, IBrush background)
         {
-            var tt = GenerateTooltip(generator);
+            var tt = GenerateTooltip(generator, scale);
 
             if (background != null)
             {
@@ -168,6 +213,6 @@ namespace Awv.Games.WoW.Items
             }
         }
 
-        protected virtual bool IsCorrupted() => false;
+        public virtual bool IsCorrupted() => false;
     }
 }
