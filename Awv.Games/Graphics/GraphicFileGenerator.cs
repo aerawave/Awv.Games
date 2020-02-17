@@ -1,6 +1,5 @@
 ﻿using Awv.Automation.Generation;
 using Awv.Automation.Generation.Interface;
-using System;
 using System.IO;
 using System.Linq;
 
