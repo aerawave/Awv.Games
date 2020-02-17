@@ -113,6 +113,9 @@ namespace Awv.Games.WoW.Graphics
             gen.Mutate(img =>
             {
                 var yoffset = tooltipPadding.Height;
+                if (Emblem != null)
+                    yoffset += EmblemAnchorY * scale;
+
                 img.DrawText(title.Text, titleRenderer.Font, title.Color, new PointF(tooltipPadding.Width, yoffset));
 
                 yoffset += titleSize.Height + textPadding.Height;
@@ -190,10 +193,14 @@ namespace Awv.Games.WoW.Graphics
             width = Math.Max(width, tileSpan);//if (width < tileSpan) throw new ArgumentException($"{nameof(width)} must be at least {tileSpan}.");
             height = Math.Max(height, tileSpan);//if (height < tileSpan) throw new ArgumentException($"{nameof(height)} must be at least {tileSpan}.");
 
+            var yoffset = 0f;
+            if (Emblem != null)
+                yoffset = EmblemAnchorY * scale;
 
-            var bg = new Image<Rgba32>(width, height);
-            var fg = new Image<Rgba32>(width, height);
-            var layered = new Image<Rgba32>(width, height);
+            var yoffseti = (int)yoffset;
+            var bg = new Image<Rgba32>(width, height + yoffseti);
+            var fg = new Image<Rgba32>(width, height + yoffseti);
+            var layered = new Image<Rgba32>(width, height + yoffseti);
 
             var scaled = new Size((int)(Border.TileSize * scale), (int)(Border.TileSize * scale));
             var innerWidth = width - scaled.Width * 2;
@@ -204,10 +211,16 @@ namespace Awv.Games.WoW.Graphics
 
             bg.Mutate(x => x.Fill(FillColor, new Rectangle(scaled.Width, scaled.Height, innerWidth, innerHeight)));
 
-            layered.Mutate(x => x
-                .DrawImage(bg, new Point(0, 0), 1f)
-                .DrawImage(fg, new Point(0, 0), 1f)
-            );
+            layered.Mutate(x =>
+            {
+                x.DrawImage(bg, new Point(0, yoffseti), 1f);
+                x.DrawImage(fg, new Point(0, yoffseti), 1f);
+                if (Emblem != null)
+                {
+                    var emblem = Emblem.Clone(img => img.Resize((int)(Emblem.Width * scale), (int)(Emblem.Height * scale)));
+                    x.DrawImage(emblem, new Point(width / 2 - emblem.Width / 2, 0), 1f);
+                }
+            });
             return layered;
         }
 

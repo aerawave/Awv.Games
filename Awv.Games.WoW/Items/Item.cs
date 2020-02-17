@@ -179,7 +179,10 @@ namespace Awv.Games.WoW.Items
                 var ttwic = new Image<Rgba32>(tt.Width + icon.Width, Math.Max(tt.Height, icon.Height));
                 ttwic.Mutate(img =>
                 {
-                    img.DrawImage(icon, new Point(0, 0), 1f);
+                    var yoffset = 0;
+                    if (generator.Emblem != null)
+                        yoffset = (int)(generator.EmblemAnchorY * scale);
+                    img.DrawImage(icon, new Point(0, yoffset), 1f);
                     img.DrawImage(tt, new Point(icon.Width, 0), 1f);
                 });
 
