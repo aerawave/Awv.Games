@@ -190,8 +190,8 @@ namespace Awv.Games.WoW.Graphics
         {
             var tilesize = Border.TileSize;
             var tileSpan = (int)((float)tilesize * 2 * scale);
-            width = Math.Max(width, tileSpan);//if (width < tileSpan) throw new ArgumentException($"{nameof(width)} must be at least {tileSpan}.");
-            height = Math.Max(height, tileSpan);//if (height < tileSpan) throw new ArgumentException($"{nameof(height)} must be at least {tileSpan}.");
+            width = Math.Max(width, tileSpan);
+            height = Math.Max(height, tileSpan);
 
             var yoffset = 0f;
             if (Emblem != null)
