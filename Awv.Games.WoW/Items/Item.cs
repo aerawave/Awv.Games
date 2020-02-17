@@ -31,7 +31,6 @@ namespace Awv.Games.WoW.Items
         public List<string> SpecialItemFlags { get; set; } = new List<string>();
         public List<UseEffect> UseEffects { get; set; } = new List<UseEffect>();
         public IGraphic Icon { get; set; }
-        public bool HasIcon => Icon != null;
         public CurrencyCount SellPrice { get; set; } = new WoWCurrency().GetCurrency(0);
         public uint MaxStack { get; set; }
         public int Durability { get; set; } = 0;
@@ -127,7 +126,6 @@ namespace Awv.Games.WoW.Items
 
         public virtual ITooltipSegment GetLowerSegment()
         {
-            var equipment = this as IEquipment;
             var list = new List<TooltipText>();
 
             var level = GetRequiredLevel();

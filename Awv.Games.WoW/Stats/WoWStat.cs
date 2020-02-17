@@ -38,7 +38,7 @@ namespace Awv.Games.WoW.Stats
 
         public bool IsQuantifiable() => Quantifiable;
 
-        public string GetDisplayString() => IsQuantifiable() ? $"{Auto.Sign(Amount, "N0")} {Name}" : Name;
+        public string GetDisplayString() => IsQuantifiable() ? $"{Amount.ToString("+#;-#")} {Name}" : Name;
 
         public override string ToString() => GetDisplayString();
     }

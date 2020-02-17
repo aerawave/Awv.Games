@@ -17,7 +17,7 @@ namespace Awv.Games.WoW.Items.Equipment
 
         public List<IDamageRange> AdditionalDamage { get; set; } = new List<IDamageRange>();
 
-        public decimal DamagePerSecond => AttackSpeed > 0 ? ((MinimumDamage + MaximumDamage) / (2 * AttackSpeed)) : 0;
+        public decimal DamagePerSecond => AttackSpeed > 0 ? (GetDamageRanges().Sum(dmg => dmg.GetMinimum() + dmg.GetMaximum()) / (2 * AttackSpeed)) : 0;
 
         public override ITooltipSegment GetCoreSegment()
         {
@@ -36,13 +36,9 @@ namespace Awv.Games.WoW.Items.Equipment
 
         public override IEnumerable<IEffect> GetEffects() => ChanceOnHitEffects.Concat(base.GetEffects()).ToArray();
 
-        public decimal GetMinimumDamage() => MinimumDamage;
-
-        public decimal GetMaximumDamage() => MaximumDamage;
-
         public decimal GetAttackSpeed() => AttackSpeed;
 
-        public IEnumerable<IDamageRange> GetDammageRanges()
+        public IEnumerable<IDamageRange> GetDamageRanges()
             => AdditionalDamage.ToArray().Prepend(DefaultDamage);
     }
 }

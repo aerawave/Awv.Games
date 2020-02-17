@@ -5,7 +5,7 @@ namespace Awv.Games.WoW.Items.Equipment.Interface
 {
     public interface IWeapon : IEquipment
     {
-        IEnumerable<IDamageRange> GetDammageRanges();
+        IEnumerable<IDamageRange> GetDamageRanges();
         decimal GetAttackSpeed();
     }
 }

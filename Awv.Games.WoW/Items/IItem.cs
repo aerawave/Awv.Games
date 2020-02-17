@@ -34,6 +34,10 @@ namespace Awv.Games.WoW.Items
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> GetSpecialItemFlags();
+        /// <summary>
+        /// This includes things like "Use:" "Chance on hit:" and "Equip:"
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<IEffect> GetEffects();
         ItemRarity GetRarity();
         uint GetMaxStack();
