@@ -10,13 +10,25 @@ namespace Awv.Games.WoW.Items.Equipment
 {
     public class Equipment : Item, IEquipment
     {
+        #region Properties
         public string MultiPieceName { get; set; }
         public List<IWoWStat> Stats { get; set; } = new List<IWoWStat>();
         public List<EquipEffect> EquipEffects { get; set; } = new List<EquipEffect>();
         public EquipmentType Type { get; set; }
-
-        public bool HasStat(string name) => Stats.Any(stat => stat.GetName() == name);
-
+        public int Durability { get; set; } = 0;
+        #endregion
+        #region IItem Accessors
+        public override bool IsCorrupted() => Stats.Any(stat => stat.GetStatType() == StatType.Corruption);
+        public override IEnumerable<IEffect> GetEffects() => EquipEffects.Concat(base.GetEffects()).ToArray();
+        #endregion
+        #region IEquipment Accessors
+        public string GetMultiPieceName() => MultiPieceName;
+        public bool IsMultiEquipment() => !string.IsNullOrWhiteSpace(MultiPieceName);
+        public IEnumerable<IWoWStat> GetStats() => Stats;
+        public EquipmentType GetEquipmentType() => Type;
+        public bool HasDurability() => Durability > 0;
+        #endregion
+        #region ITooltip Methods
         public override IEnumerable<ITooltipSegment> GetSegments()
         {
             var segments = new List<ITooltipSegment>();
@@ -36,7 +48,9 @@ namespace Awv.Games.WoW.Items.Equipment
 
             return segments;
         }
-
+        #endregion
+        #region Equipment Methods
+        public bool HasStat(string name) => Stats.Any(stat => stat.GetName() == name);
         public override ITooltipSegment GetCoreSegment()
         {
             var segment = new TooltipSegment();
@@ -48,7 +62,6 @@ namespace Awv.Games.WoW.Items.Equipment
 
             return segment;
         }
-
         public virtual ITooltipSegment GetStatsSegment()
         {
             var segment = new TooltipSegment();
@@ -62,8 +75,8 @@ namespace Awv.Games.WoW.Items.Equipment
             tertiaryStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon)));
             corruptionStats.ForEach(stat => segment.LeftTexts.Add(new TooltipText(stat.GetDisplayString(), TooltipColors.CorruptEffect)));
 
+            // TODO (?):
             // artifact relic slots
-
             // gem sockets
             // socket bonus
 
@@ -71,19 +84,12 @@ namespace Awv.Games.WoW.Items.Equipment
             if (HasDurability())
                 segment.LeftTexts.Add($"Durability {durability} / {durability}");
 
+            // TODO (?):
             // class restrictions
 
             return segment;
         }
+        #endregion
 
-        public override IEnumerable<IEffect> GetEffects() => EquipEffects.Concat(base.GetEffects()).ToArray();
-        public EquipmentType GetEquipmentType() => Type;
-        public IEnumerable<IWoWStat> GetStats() => Stats;
-
-        public override bool IsCorrupted() => Stats.Any(stat => stat.GetStatType() == StatType.Corruption);
-
-        public string GetMultiPieceName() => MultiPieceName;
-
-        public bool IsMultiEquipment() => !string.IsNullOrWhiteSpace(MultiPieceName);
     }
 }

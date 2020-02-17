@@ -3,6 +3,9 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Awv.Games.WoW.Items.Effects
 {
+    /// <summary>
+    /// Used for "Equip: ***" effects
+    /// </summary>
     public class EquipEffect : Effect
     {
         public EquipEffect(string value, Rgba32 color) : base("Equip", value, color) { }

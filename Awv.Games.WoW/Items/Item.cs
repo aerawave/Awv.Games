@@ -19,35 +19,44 @@ namespace Awv.Games.WoW.Items
 {
     public class Item : IItem
     {
-        public string Name { get; set; }
-        public ItemLevel ItemLevel { get; set; }
-        public PlayerLevel RequiredLevel { get; set; }
+        #region Properties
+        public IGraphic Icon { get; set; }
         public ItemRarity Rarity { get; set; }
-        public string Flavor { get; set; }
+        public string Name { get; set; }
+        public List<string> SpecialItemFlags { get; set; } = new List<string>();
         public string Usage { get; set; }
-        public string ItemType { get; set; }
+        public ItemLevel ItemLevel { get; set; }
         public string BindsOn { get; set; }
         public string Uniqueness { get; set; } = null;
-        public List<string> SpecialItemFlags { get; set; } = new List<string>();
+        public string ItemType { get; set; }
         public List<UseEffect> UseEffects { get; set; } = new List<UseEffect>();
-        public IGraphic Icon { get; set; }
-        public CurrencyCount SellPrice { get; set; } = new WoWCurrency().GetCurrency(0);
-        public uint MaxStack { get; set; }
-        public int Durability { get; set; } = 0;
+        public Level RequiredLevel { get; set; }
         public TimeSpan? Duration { get; set; }
-
-        public string GetName() => Name;
-        public string GetBindsOn() => BindsOn;
-        public TimeSpan? GetDuration() => Duration;
-        public string GetFlavor() => Flavor;
-        public IItemLevel GetItemLevel() => ItemLevel;
-        public string GetItemType() => ItemType;
-        public uint GetMaxStack() => MaxStack;
+        public uint MaxStack { get; set; }
+        public string Flavor { get; set; }
+        public CurrencyCount SellPrice { get; set; } = new WoWCurrency().GetCurrency(0);
+        #endregion
+        #region ITooltip Accessors
+        public TooltipText GetTitle() => new TooltipText(GetName(), TooltipColors.ToColor(Rarity));
+        #endregion
+        #region IItem Accessors
         public ItemRarity GetRarity() => Rarity;
+        public virtual bool IsCorrupted() => false;
+        public string GetName() => Name;
+        public IEnumerable<string> GetSpecialItemFlags() => SpecialItemFlags;
+        public string GetUsage() => Usage;
+        public IItemLevel GetItemLevel() => ItemLevel;
+        public string GetBindsOn() => BindsOn;
+        public string GetUniqueness() => Uniqueness;
+        public string GetItemType() => ItemType;
+        public virtual IEnumerable<IEffect> GetEffects() => UseEffects;
         public IPlayerLevel GetRequiredLevel() => RequiredLevel;
-        public bool HasDurability() => Durability > 0;
-
-
+        public TimeSpan? GetDuration() => Duration;
+        public uint GetMaxStack() => MaxStack;
+        public string GetFlavor() => Flavor;
+        public CurrencyCount GetSellPrice() => SellPrice;
+        #endregion
+        #region ITooltip Methods
         public virtual IEnumerable<ITooltipSegment> GetSegments()
         {
             var segments = new List<ITooltipSegment>();
@@ -61,21 +70,9 @@ namespace Awv.Games.WoW.Items
 
             return segments;
         }
-
-        public IEnumerable<string> GetSpecialItemFlags() => SpecialItemFlags;
-
-        public TooltipText GetTitle() => new TooltipText(GetName(), TooltipColors.ToColor(Rarity));
-
-        public string GetUniqueness() => Uniqueness;
-
-        public string GetUsage() => Usage;
-
-        public virtual IEnumerable<IEffect> GetEffects() => UseEffects;
-        public CurrencyCount GetSellPrice() => SellPrice;
-        public int GetDurability() => Durability;
-
+        #endregion
+        #region Item Methods
         public virtual ITooltipSegment GetCoreSegment() => null;
-
         public virtual ITooltipSegment GetUpperSegment()
         {
             var equipment = this as IEquipment;
@@ -95,7 +92,7 @@ namespace Awv.Games.WoW.Items
             if (usage != null)
                 list.Add(new TooltipText(usage, TooltipColors.Yellow));
 
-            list.Add(new TooltipText($"Item Level {GetItemLevel().GetItemLevel()}", TooltipColors.Yellow));
+            list.Add(new TooltipText($"Item Level {GetItemLevel().GetLevel()}", TooltipColors.Yellow));
 
             var bindsOn = GetBindsOn();
             if (!string.IsNullOrWhiteSpace(bindsOn))
@@ -111,7 +108,6 @@ namespace Awv.Games.WoW.Items
 
             return new TooltipSegment { LeftTexts = list };
         }
-
         public virtual ITooltipSegment GetEffectsSegment()
         {
             var list = new List<TooltipText>();
@@ -123,7 +119,6 @@ namespace Awv.Games.WoW.Items
 
             return new TooltipSegment { LeftTexts = list };
         }
-
         public virtual ITooltipSegment GetLowerSegment()
         {
             var list = new List<TooltipText>();
@@ -137,7 +132,7 @@ namespace Awv.Games.WoW.Items
                 // set name
                 // set pieces
                 // set effects
-                
+
                 // also Azerite Gear
             }
 
@@ -164,7 +159,6 @@ namespace Awv.Games.WoW.Items
 
             return new TooltipSegment { LeftTexts = list };
         }
-
         public virtual Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale)
         {
             var tt = generator.Generate(this, scale);
@@ -191,7 +185,6 @@ namespace Awv.Games.WoW.Items
                 return tt;
             }
         }
-
         public Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale, IBrush background)
         {
             var tt = GenerateTooltip(generator, scale);
@@ -213,7 +206,6 @@ namespace Awv.Games.WoW.Items
                 return tt;
             }
         }
-
-        public virtual bool IsCorrupted() => false;
+        #endregion
     }
 }

@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Awv.Games.WoW.Items.Equipment
 {
+    /// <summary>
+    /// A standard, basic damage range.
+    /// </summary>
     public class DamageRange : IDamageRange
     {
         public decimal Minimum { get; set; }

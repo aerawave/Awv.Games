@@ -2,9 +2,8 @@
 
 namespace Awv.Games.WoW.Levels.Interface
 {
-    public interface IItemLevel
+    public interface IItemLevel : ILevel
     {
-        int GetItemLevel();
         int CalculateLevel(ItemRarity rarity);
         int GetTotalStats(ItemRarity rarity);
         int GetDPS(ItemRarity rarity);

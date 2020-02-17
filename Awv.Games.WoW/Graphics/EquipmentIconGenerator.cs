@@ -6,9 +6,18 @@ using System.Linq;
 
 namespace Awv.Games.WoW.Graphics
 {
+    /// <summary>
+    /// Used to generate an icon for a piece of equipment from a given <see cref="IconUsageDirectory"/>. See system-data.md at the root of this project for more details.
+    /// </summary>
     public class EquipmentIconGenerator : GraphicFileGenerator
     {
+        /// <summary>
+        /// Type of equipment to get an icon for.
+        /// </summary>
         public EquipmentType EquipmentType { get; set; }
+        /// <summary>
+        /// The directory which contains icon usage files.
+        /// </summary>
         public string IconUsageDirectory { get; set; }
 
         public EquipmentIconGenerator(string directory, string iconUsageDirectory) : base(directory)
@@ -21,6 +30,10 @@ namespace Awv.Games.WoW.Graphics
             EquipmentType = equipmentType;
         }
 
+        /// <summary>
+        /// Generates a graphic with a given <see cref="EquipmentType"/>.
+        /// </summary>
+        /// <returns>A graphic with a given <see cref="EquipmentType"/></returns>
         public override IGraphic Generate(IRNG random)
         {
             var topdir = EquipmentType.Definition.Type;

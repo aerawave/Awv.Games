@@ -3,6 +3,9 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Awv.Games.WoW.Items.Effects
 {
+    /// <summary>
+    /// Basic customizable <see cref="IEffect"/>.
+    /// </summary>
     public class Effect : IEffect
     {
         public virtual string Origin { get; private set; }

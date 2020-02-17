@@ -226,7 +226,7 @@ namespace Awv.Games.WoW.Graphics
 
         private void DrawBorder(Image<Rgba32> target, BorderSource border, int width, int height, float scale)
         {
-            border.Rescale(scale);
+            border.Scale(scale);
             var tileSize = new Size(border.TileSize, border.TileSize);
             var scaled = new Size((int)(border.TileSize * scale), (int)(border.TileSize * scale));
             var innerWidth = width - scaled.Width * 2;
@@ -255,7 +255,7 @@ namespace Awv.Games.WoW.Graphics
                 }
             });
 
-            border.Retile();
+            border.Tile();
         }
 
     }

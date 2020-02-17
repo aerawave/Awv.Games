@@ -3,9 +3,15 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Awv.Games.WoW.Items.Effects
 {
+    /// <summary>
+    /// Used for "Chance on hit: ***" effects.
+    /// </summary>
     public class ChanceOnHitEffect : Effect
     {
         private string hitType;
+        /// <summary>
+        /// The type of hit. Defaults to "Hit". This is for things like "Critical Hit", "Spell Hit", or "Critical Spell Hit".
+        /// </summary>
         public string HitType {
             get => hitType ?? "Hit";
             set => hitType = value;

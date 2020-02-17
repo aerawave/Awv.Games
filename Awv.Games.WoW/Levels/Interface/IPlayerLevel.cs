@@ -2,9 +2,8 @@
 
 namespace Awv.Games.WoW.Levels.Interface
 {
-    public interface IPlayerLevel
+    public interface IPlayerLevel : ILevel
     {
-        int GetLevel();
-        ItemLevel GetItemLevel(ItemRarity rarity);
+        IItemLevel GetItemLevel(ItemRarity rarity);
     }
 }

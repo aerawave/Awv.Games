@@ -9,7 +9,19 @@ namespace Awv.Games.WoW.Items
 {
     public interface IItem : ITooltip
     {
+        ItemRarity GetRarity();
+        bool IsCorrupted();
         string GetName();
+        /// <summary>
+        /// Ex: "Titanforged" / "Warforged"
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<string> GetSpecialItemFlags();
+        /// <summary>
+        /// Ex: "Champion Equipment"
+        /// </summary>
+        /// <returns></returns>
+        string GetUsage();
         IItemLevel GetItemLevel();
         string GetBindsOn();
         /// <summary>
@@ -17,34 +29,20 @@ namespace Awv.Games.WoW.Items
         /// </summary>
         /// <returns></returns>
         string GetUniqueness();
-        IPlayerLevel GetRequiredLevel();
-        string GetFlavor();
-        /// <summary>
-        /// Ex: "Champion Equipment"
-        /// </summary>
-        /// <returns></returns>
-        string GetUsage();
         /// <summary>
         /// Ex: "Toy"
         /// </summary>
         /// <returns></returns>
         string GetItemType();
         /// <summary>
-        /// Ex: "Titanforged" / "Warforged"
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<string> GetSpecialItemFlags();
-        /// <summary>
         /// This includes things like "Use:" "Chance on hit:" and "Equip:"
         /// </summary>
         /// <returns></returns>
         IEnumerable<IEffect> GetEffects();
-        ItemRarity GetRarity();
-        uint GetMaxStack();
+        IPlayerLevel GetRequiredLevel();
         TimeSpan? GetDuration();
+        uint GetMaxStack();
+        string GetFlavor();
         CurrencyCount GetSellPrice();
-        int GetDurability();
-        bool HasDurability();
-        bool IsCorrupted();
     }
 }

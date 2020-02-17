@@ -6,6 +6,9 @@ namespace Awv.Games.WoW.Levels
 {
     public struct ItemLevel : IItemLevel
     {
+        /// <summary>
+        /// Like other stuff in this class, I don't remember how I got here. Just don't think about it too much.
+        /// </summary>
         public const int ArbitraryTurnover = 327;
 
         public int CoreLevel { get; set; }
@@ -37,7 +40,7 @@ namespace Awv.Games.WoW.Levels
                     0));
         }
 
-        public int GetItemLevel() => CoreLevel;
+        public int GetLevel() => CoreLevel;
 
         /// <summary>
         /// Calculates the DPS for a given rarity at the current item level.

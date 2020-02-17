@@ -76,6 +76,7 @@ namespace Awv.Games.WoW.Tooltips
         public static string GetTooltipDisplayString(this TimeSpan span)
         {
             var cseconds = Math.Ceiling(span.TotalSeconds) % 60;
+
             if (span.TotalDays >= 1)
                 return $"{span.Days} day{(span.Days > 1 ? "s" : "")}";
             else if (span.TotalHours >= 1)
