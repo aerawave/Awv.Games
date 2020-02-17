@@ -50,6 +50,7 @@ namespace Awv.Games.WoW.Tooltips
                 case ItemRarity.Rare: return Rare;
                 case ItemRarity.Epic: return Epic;
                 case ItemRarity.Legendary: return Legendary;
+                case ItemRarity.Artifact: return Artifact;
             }
             return Common;
         }
