@@ -1,6 +1,4 @@
-﻿using Awv.Games.Utilities;
-
-namespace Awv.Games.WoW.Stats
+﻿namespace Awv.Games.WoW.Stats
 {
     public class WoWStat : IWoWStat
     {
