@@ -37,11 +37,11 @@ Each heading is a different "segment" of the tooltip.
 # Stats Segment (nullable)
 - *equipment only*
     - `Stats` - https://www.wowhead.com/item=49623
-    - `Artifact Relic Slots` - https://www.wowhead.com/item=128872
-    - `Gem Sockets` - https://www.wowhead.com/item=49623
-    - `Socket Bonus` - https://www.wowhead.com/item=49623
+    - `Artifact Relic Slots` - https://www.wowhead.com/item=128872 **Not yet implemented*
+    - `Gem Sockets` - https://www.wowhead.com/item=49623 **Not yet implemented*
+    - `Socket Bonus` - https://www.wowhead.com/item=49623 **Not yet implemented*
     - `Durability` - https://www.wowhead.com/item=49623
-- Classes: `classes` - https://www.wowhead.com/item=49623
+- Classes: `classes` - https://www.wowhead.com/item=49623 **Not yet implemented*
 
 # Effects Segment
 - *weapon only*
@@ -56,10 +56,10 @@ Each heading is a different "segment" of the tooltip.
 # Lower Segment
 - `Requires Level` - https://www.wowhead.com/item=18816
 - *equipment only*
-    - Set Name - https://www.wowhead.com/item=77949
-    - Set Pieces - https://www.wowhead.com/item=77949
-    - Set Effects - https://www.wowhead.com/item=77949
-    - **See also: Azerite Gear - https://www.wowhead.com/item=174119*
+    - Set Name - https://www.wowhead.com/item=77949 **Not yet implemented*
+    - Set Pieces - https://www.wowhead.com/item=77949 **Not yet implemented*
+    - Set Effects - https://www.wowhead.com/item=77949 **Not yet implemented*
+    - **See also: Azerite Gear - https://www.wowhead.com/item=174119* **Not yet implemented*
 - `Duration`
 - `Max Stack`
 - `Flavor` - https://www.wowhead.com/item=132357
