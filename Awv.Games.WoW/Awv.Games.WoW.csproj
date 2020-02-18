@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Joshua Kinzer</Authors>
+    <Company>Aerawave</Company>
+    <Description>Awv.Games.WoW is used to simulate items and weapons from World of Warcraft.</Description>
+    <RepositoryUrl>https://github.com/aerawave/Awv.Games</RepositoryUrl>
+    <RepositoryType></RepositoryType>
+    <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
+    <PackageTags>aerawave wow world of warcraft</PackageTags>
+    <PackageReleaseNotes>Awv.Games.WoW is used to simulate items and weapons from World of Warcraft.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
