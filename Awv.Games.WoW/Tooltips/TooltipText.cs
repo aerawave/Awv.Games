@@ -1,7 +1,4 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Awv.Games.WoW.Tooltips
 {
@@ -18,9 +15,10 @@ namespace Awv.Games.WoW.Tooltips
         public TooltipText(string text, Rgba32 color) : this(text) { Color = color; }
         public TooltipText(string text, Rgba32 color, TooltipTextType type) : this(text, color) { Type = type; }
 
-        public static implicit operator TooltipText(string text)
-            => new TooltipText(text, TooltipColors.Common);
+        public static implicit operator TooltipText(string text) => new TooltipText(text, TooltipColors.Common);
 
         public static readonly TooltipText Empty = new TooltipText("", TooltipColors.Common);
+
+        public override string ToString() => Text;
     }
 }

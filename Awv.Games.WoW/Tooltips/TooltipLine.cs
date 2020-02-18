@@ -12,5 +12,7 @@
             LeftText = left;
             RightText = right;
         }
+
+        public override string ToString() => $"<{LeftText}>---<{RightText}>";
     }
 }
