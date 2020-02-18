@@ -10,3 +10,4 @@ Awv.Games.Core is a set of core pieces of functionality that may be universal to
 
 Awv.Games.WoW is used to simulate items and weapons from World of Warcraft. It is used primarily to generate tooltips from the game.
 - For a specification of how tooltips are constructed, see [item-tooltip-spec.md](Awv.Games.WoW/item-tooltip-spec.md).
+- For an example on how to use Awv.Games.WoW, see [how-to-use.md](Awv.Games.WoW/how-to-use.md)
