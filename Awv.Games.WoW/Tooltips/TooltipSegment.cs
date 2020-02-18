@@ -12,6 +12,13 @@ namespace Awv.Games.WoW.Tooltips
 
         public IEnumerable<TooltipText> GetRightTexts() => RightTexts;
 
+        public ITooltipSegment Levelled()
+        {
+            var levelled = Clone() as TooltipSegment;
+            levelled.Level();
+            return levelled;
+        }
+
         public void Level()
         {
             while (LeftTexts.Count < RightTexts.Count)
@@ -29,5 +36,12 @@ namespace Awv.Games.WoW.Tooltips
             foreach (var left in lefts) LeftTexts.Add(left);
             foreach (var right in rights) RightTexts.Add(right);
         }
+
+        public object Clone()
+            => new TooltipSegment
+            {
+                LeftTexts = new List<TooltipText>(LeftTexts),
+                RightTexts = new List<TooltipText>(RightTexts)
+            };
     }
 }
