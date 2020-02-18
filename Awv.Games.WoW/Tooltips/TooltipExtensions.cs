@@ -7,71 +7,14 @@ namespace Awv.Games.WoW.Tooltips
 {
     public static class TooltipExtensions
     {
-        public static TooltipSegment Normalize(this ITooltipSegment segment)
+        public static IEnumerable<TooltipLine> GetLines(this ITooltipSegment segment)
         {
-            var target = new TooltipSegment();
-
-            segment.GetLeftTexts().ToList().ForEach(text => target.LeftTexts.Add(text));
-            segment.GetRightTexts().ToList().ForEach(text => target.RightTexts.Add(text));
-
-            var count = target.LeftTexts.Count - target.RightTexts.Count;
-
-            if (count != 0)
-            {
-                var lean = count / Math.Abs(count);
-                count = Math.Abs(count);
-
-                switch (lean)
-                {
-                    case -1: // left needs compensation
-                        for (var i = 0; i < count; i++)
-                            target.LeftTexts.Add(TooltipText.Empty);
-                        break;
-                    case 1: // right needs compensation
-                        for (var i = 0; i < count; i++)
-                            target.RightTexts.Add(TooltipText.Empty);
-                        break;
-                }
-            }
-
-            return target;
+            var levelled = segment.Levelled();
+            return levelled.GetLeftTexts().Zip(levelled.GetRightTexts())
+                .Select(texts => new TooltipLine(texts.First, texts.Second));
         }
-
-        public static TooltipSegment ToSegment(this ITooltip tooltip)
-        {
-            var target = new TooltipSegment();
-            var segments = tooltip.GetSegments();
-
-            foreach (var segment in segments)
-            {
-                var segmentNormalized = segment.Normalize();
-                segmentNormalized.GetLeftTexts().ToList().ForEach(text => target.LeftTexts.Add(text));
-                segmentNormalized.GetRightTexts().ToList().ForEach(text => target.RightTexts.Add(text));
-            }
-
-            return target;
-        }
-
         public static IEnumerable<TooltipLine> GetLines(this ITooltip tooltip)
-        {
-            var lines = new List<TooltipLine>();
-
-            var segments = tooltip.GetSegments();
-
-            segments.ToList().ForEach(unnormalizedSegment =>
-            {
-                var segment = unnormalizedSegment.Normalize();
-                var leftTexts = segment.GetLeftTexts().ToArray();
-                var rightTexts = segment.GetRightTexts().ToArray();
-
-                for (var i = 0; i < leftTexts.Length; i++)
-                {
-                    lines.Add(new TooltipLine(leftTexts[i], rightTexts[i]));
-                }
-            });
-
-            return lines;
-        }
+            => tooltip.GetSegments().SelectMany(segment => segment.GetLines()).ToArray();
 
         public static string GetTooltipDisplayString(this TimeSpan span)
         {
