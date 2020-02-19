@@ -32,7 +32,7 @@ namespace Awv.Games.WoW.Tooltips
 
         public ITooltipSection GetHeaderSegment(IItem item)
         {
-            var equipment = this as IEquipment;
+            var equipment = item as IEquipment;
             var segment = new TooltipSection();
 
             if (this is IEquipment && equipment.IsMultiEquipment())
