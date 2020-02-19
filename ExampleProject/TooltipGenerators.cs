@@ -27,10 +27,10 @@ namespace ExampleProject
             Alert.Check(blizzardInterfaceArtDirectory, nameof(blizzardInterfaceArtDirectory), $"the static {nameof(TooltipGenerator)} constructor", "This directory will be the root directory for where your exported PNG files are that were converted from BLP files.");
 
             var fillFolder = Path.Combine(Directory.GetCurrentDirectory(), @"Assets\Tooltips");
-            var borderFolder = Path.Combine(blizzardInterfaceArtDirectory, @"\Interface\Tooltips");
-            var corruptedItemsFolder = Path.Combine(blizzardInterfaceArtDirectory, @"\Interface\CorruptedItems");
-            var azeriteItemsFolder = Path.Combine(blizzardInterfaceArtDirectory, @"\Interface\Azerite");
-            var currencyFolder = Path.Combine(blizzardInterfaceArtDirectory, @"\Interface\MONEYFRAME");
+            var borderFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\Tooltips");
+            var corruptedItemsFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\CorruptedItems");
+            var azeriteItemsFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\Azerite");
+            var currencyFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\MONEYFRAME");
             var currencyName = "UI-MoneyIcons.png";
             var corruptedEmblemName = "CorruptedTooltip.png";
             var azeriteEmblemName = "AzeriteTooltip.png";

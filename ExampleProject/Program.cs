@@ -3,6 +3,7 @@ using Awv.Games.WoW.Data;
 using Awv.Games.WoW.Data.Artwork;
 using Awv.Games.WoW.Data.Items;
 using Awv.Games.WoW.Graphics;
+using Awv.Games.WoW.Items;
 using Awv.Games.WoW.Items.Effects;
 using Awv.Games.WoW.Items.Equipment;
 using Awv.Games.WoW.Levels;
@@ -109,7 +110,7 @@ namespace ExampleProject
 
             // fancy some corruption?
             fate.Stats.Add(new WoWStat(StatType.Corruption, "Corruption", 20));
-            fate.EquipEffects.Add("Increases your Critical Strike you gain from all sources by 12%.");
+            fate.EquipEffects.Add(new EquipEffect("Increases the amount of Critical Strike you gain from all sources by 12%.").Corrupt());
 
             generator = TooltipGenerators.Resolve(fate);
 
@@ -126,6 +127,7 @@ namespace ExampleProject
             var item = new Weapon();
 
             item.Name = "The Dreadblades";
+            item.Rarity = ItemRarity.Artifact;
             item.MultiPieceName = "Fate";
             item.ItemLevel = new ItemLevel(152);
             item.BindsOn = "Binds when picked up";
@@ -141,7 +143,7 @@ namespace ExampleProject
 
             if (withIcon)
             {
-                string iconDirectory = @"\\awvserv\Apps\Data\BlizzardInterfaceArt\Interface\ICONS";
+                string iconDirectory = null;
                 Alert.Check(iconDirectory, nameof(iconDirectory), $"the {nameof(GetDreadbladesFate)} function", "This should be the PNG export location with '/Interface/ICONS' appended to the end.");
                 var iconGen = new GraphicFileGenerator(iconDirectory);
                 item.Icon = iconGen.FindSpecific("inv_sword_1h_artifactskywall_d_01");
@@ -151,7 +153,7 @@ namespace ExampleProject
 
             item.EquipEffects.Add(new EquipEffect("Grants the Curse of the Dreadblades ability, which lets you use finishers more rapidly... at a price."));
             item.Flavor = "She saw herself commanding an impossibly large pirate fleet, one that could conquer the high seas and all the nations of Azeroth. Every ship that dared to challenge her burned, and every city gave up its treasures or was destroyed.";
-            
+
             item.SellPrice.SetAmount(1898637);
 
             return item;
