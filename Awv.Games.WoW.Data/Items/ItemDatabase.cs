@@ -1,4 +1,4 @@
-﻿using Awv.Games.WoW.Data.Data.Items.DataTypes;
+﻿using Awv.Games.WoW.Data.Items.DataTypes;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -66,7 +66,7 @@ namespace Awv.Games.WoW.Data.Items
             }
         }
 
-        public void GenerateIconUsage(ItemSubClass subclass, Stream stream, ExportFormat format = ExportFormat.PlainText)
+        public void ExportIconUsage(ItemSubClass subclass, Stream stream, ExportFormat format = ExportFormat.PlainText)
         {
             var items = Items.Values.Where(item => item.SubClass == subclass && !string.IsNullOrWhiteSpace(item.IconFileName)).ToArray();
             using var writer = new StreamWriter(stream);
@@ -87,15 +87,15 @@ namespace Awv.Games.WoW.Data.Items
             }
         }
 
-        public void GenerateIconUsage(ItemSubClass subclass, string filepath, ExportFormat format = ExportFormat.PlainText)
+        public void ExportIconUsage(ItemSubClass subclass, string filepath, ExportFormat format = ExportFormat.PlainText)
         {
             var directory = Path.GetDirectoryName(filepath);
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            GenerateIconUsage(subclass, File.Open(filepath, FileMode.Create), format);
+            ExportIconUsage(subclass, File.Open(filepath, FileMode.Create), format);
         }
 
-        public void GenerateIconUsage(ItemClass itemClass, string directory, ExportFormat format = ExportFormat.PlainText)
+        public void ExportIconUsage(ItemClass itemClass, string directory, ExportFormat format = ExportFormat.PlainText)
         {
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
@@ -103,10 +103,10 @@ namespace Awv.Games.WoW.Data.Items
             var subclasses = ItemSubClasses.Values.Where(isc => isc.Class == itemClass).ToArray();
 
             foreach (var subclass in subclasses)
-                GenerateIconUsage(subclass, Path.Combine(directory, $"{subclass.VerboseName ?? subclass.Name}.{format.GetExtension()}"), format);
+                ExportIconUsage(subclass, Path.Combine(directory, $"{subclass.VerboseName ?? subclass.Name}.{format.GetExtension()}"), format);
         }
 
-        public void GenerateIconUsage(string directory, ExportFormat format = ExportFormat.PlainText)
+        public void ExportIconUsage(string directory, ExportFormat format = ExportFormat.PlainText)
         {
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
@@ -114,7 +114,7 @@ namespace Awv.Games.WoW.Data.Items
             var itemClasses = ItemClasses.Values.ToArray();
 
             foreach (var itemClass in itemClasses)
-                GenerateIconUsage(itemClass, Path.Combine(directory, itemClass.Name), format);
+                ExportIconUsage(itemClass, Path.Combine(directory, itemClass.Name), format);
         }
         public ItemSubClass[] GetValidWeaponTypes()
         {
