@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Awv.Games.WoW.Data.Data
+namespace Awv.Games.WoW.Data
 {
     public static class CsvReaderExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Awv.Games.WoW.Data.Data
+namespace Awv.Games.WoW.Data
 {
     public enum ExportFormat
     {

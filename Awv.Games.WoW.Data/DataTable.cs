@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace Awv.Games.WoW.Data.Data
+namespace Awv.Games.WoW.Data
 {
     public class DataTable<TDataType> : Dictionary<int, TDataType>
         where TDataType : IWoWData

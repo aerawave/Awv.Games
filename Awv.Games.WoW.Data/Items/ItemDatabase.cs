@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Awv.Games.WoW.Data.Data.Items
+namespace Awv.Games.WoW.Data.Items
 {
     public class ItemDatabase
     {

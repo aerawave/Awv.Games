@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Awv.Games.WoW.Data.Data.Items.DataTypes
+namespace Awv.Games.WoW.Data.Items.DataTypes
 {
     /// <summary>
     /// See https://wow.tools/dbc/?dbc=item
