@@ -35,7 +35,7 @@ namespace Awv.Games.WoW.Tooltips
             var equipment = item as IEquipment;
             var segment = new TooltipSection();
 
-            if (this is IEquipment && equipment.IsMultiEquipment())
+            if (item is IEquipment && equipment.IsMultiEquipment())
             {
                 var title = GetTitle(item);
                 segment.Lines.Add(new LeftText(new TooltipText(equipment.GetMultiPieceName(), title.Color)));
@@ -166,9 +166,9 @@ namespace Awv.Games.WoW.Tooltips
             var segment = new TooltipSection();
 
 
-            var level = item.GetRequiredLevel();
-            if (level != null)
-                segment.Lines.Add(new LeftText($"Requires Level {level.GetLevel()}"));
+            var level = item.GetRequiredLevel()?.GetLevel();
+            if (level.HasValue && level.Value > 0)
+                segment.Lines.Add(new LeftText($"Requires Level {level.Value}"));
 
             if (this is IEquipment)
             {
@@ -198,7 +198,6 @@ namespace Awv.Games.WoW.Tooltips
                 var gold = sellPrice.GetAmount("g");
                 var silver = sellPrice.GetAmount("s");
                 var copper = sellPrice.GetAmount("c");
-                var sellPriceString = sellPrice.ToString();
                 segment.Lines.Add(new CurrencyLine(gold, silver, copper));
             }
 

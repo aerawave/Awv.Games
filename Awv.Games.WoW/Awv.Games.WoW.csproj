@@ -9,8 +9,8 @@
     <RepositoryType></RepositoryType>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <PackageTags>aerawave wow world of warcraft</PackageTags>
-    <PackageReleaseNotes>Fixed an issue where items' "multi piece names" wouldn't render due to an incorrect cast.</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Fixed an issue where the item tooltip provider would say an item requires level 0 if no level is specified.</PackageReleaseNotes>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
