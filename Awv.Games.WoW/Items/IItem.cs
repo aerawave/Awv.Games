@@ -1,14 +1,15 @@
 ﻿using Awv.Games.Currency;
+using Awv.Games.Graphics;
 using Awv.Games.WoW.Items.Effects;
 using Awv.Games.WoW.Levels.Interface;
-using Awv.Games.WoW.Tooltips.Interface;
 using System;
 using System.Collections.Generic;
 
 namespace Awv.Games.WoW.Items
 {
-    public interface IItem : ITooltip
+    public interface IItem
     {
+        IGraphic GetIcon();
         ItemRarity GetRarity();
         bool IsCorrupted();
         string GetName();

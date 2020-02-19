@@ -1,20 +1,32 @@
-﻿using Awv.Games.WoW.Tooltips.Interface;
+﻿using Awv.Games.WoW.Tooltips.Text.Interface;
+using SixLabors.Fonts;
+using SixLabors.Primitives;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Awv.Games.WoW.Tooltips
 {
     public static class TooltipExtensions
     {
-        public static IEnumerable<TooltipLine> GetLines(this ITooltipSegment segment)
+        public static SizeF Measure(this ITooltipLine line, RendererOptions renderer)
         {
-            var levelled = segment.Levelled();
-            return levelled.GetLeftTexts().Zip(levelled.GetRightTexts())
-                .Select(texts => new TooltipLine(texts.First, texts.Second));
+            var sizeLeft = (line as ILeftText)?.Measure(renderer) ?? SizeF.Empty;
+            var sizeRight = (line as IRightText)?.Measure(renderer) ?? SizeF.Empty;
+            var sizeParagraph = (line as IParagraphLine)?.Measure(renderer) ?? SizeF.Empty;
+            var sizes = new SizeF[] {
+                (line as ILeftText)?.Measure(renderer) ?? SizeF.Empty,
+                (line as IRightText)?.Measure(renderer) ?? SizeF.Empty,
+                (line as IParagraphLine)?.Measure(renderer) ?? SizeF.Empty
+            };
+            return new SizeF(sizes.Sum(size => size.Width), sizes.Max(size => size.Height));
         }
-        public static IEnumerable<TooltipLine> GetLines(this ITooltip tooltip)
-            => tooltip.GetSegments().SelectMany(segment => segment.GetLines()).ToArray();
+
+        public static SizeF Measure(this ILeftText leftText, RendererOptions renderer)
+            => TextMeasurer.Measure(leftText.GetLeftText().GetText(), renderer);
+        public static SizeF Measure(this IRightText rightText, RendererOptions renderer)
+            => TextMeasurer.Measure(rightText.GetRightText().GetText(), renderer);
+        public static SizeF Measure(this IParagraphLine paragraph, RendererOptions renderer)
+            => TextMeasurer.Measure(paragraph.GetParagraph().GetText(), renderer);
 
         public static string GetTooltipDisplayString(this TimeSpan span)
         {

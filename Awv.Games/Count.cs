@@ -27,5 +27,7 @@
         }
 
         public override string ToString() => $"{Quantity} * {Value}";
+        public static implicit operator long(Count<TCounted> count) => count.Quantity;
+        public static implicit operator int(Count<TCounted> count) => (int)count.Quantity;
     }
 }

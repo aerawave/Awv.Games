@@ -12,7 +12,7 @@ Input on modification (with sources) would be appreciated.
 
 Each heading is a different "segment" of the tooltip.
 
-# Upper Segment
+# Header Segment
 - `Name`
 - *multi-equipment only (multiple slots consumed by 1 item)*
     - `Piece Name` (https://www.wowhead.com/item=128872)
@@ -53,7 +53,7 @@ Each heading is a different "segment" of the tooltip.
     - `Equip Effects` - https://classic.wowhead.com/item=19120
 - `Use` - https://www.wowhead.com/item=158924
 
-# Lower Segment
+# Footer Segment
 - `Requires Level` - https://www.wowhead.com/item=18816
 - *equipment only*
     - Set Name - https://www.wowhead.com/item=77949 **Not yet implemented*

@@ -1,13 +1,17 @@
 ﻿using Awv.Games.WoW.Tooltips;
 using Awv.Games.WoW.Tooltips.Interface;
+using Awv.Games.WoW.Tooltips.Text;
+using Awv.Games.WoW.Tooltips.Text.Interface;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Processors;
 using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Awv.Games.WoW.Graphics
@@ -28,8 +32,15 @@ namespace Awv.Games.WoW.Graphics
         public CurrencySource Currency { get; set; } = new CurrencySource();
         public Rgba32 FillColor { get; set; }
 
-        public Image<Rgba32> Generate(ITooltip tooltip, float scale)
+        public Image<Rgba32> Generate<TTarget>(ITooltipProvider<TTarget> provider, TTarget target, float scale)
+            => Generate(provider.ShouldDrawIcon(target) ? provider.GetIcon(target) : null, provider.GetTitle(target), provider.GetSegments(target).ToArray(), scale);
+
+        public Image<Rgba32> Generate(ITooltipProvider provider, float scale)
+            => Generate(provider.ShouldDrawIcon() ? provider.GetIcon() : null, provider.GetTitle(), provider.GetSegments().ToArray(), scale);
+
+        private Image<Rgba32> Generate(Image<Rgba32> icon, TooltipText title, ITooltipSection[] segments, float scale)
         {
+            var linesQuery = segments.SelectMany(segment => segment.GetLines());
             if (FontFamily == null)
                 FontFamily = SystemFonts.Families.First(family => family.Name == "Verdana");
 
@@ -40,67 +51,65 @@ namespace Awv.Games.WoW.Graphics
 
             var titlePadding = scale * 96f;
 
-            var title = tooltip.GetTitle();
             var titleSize = TextMeasurer.Measure(title.Text, titleRenderer);
 
             var tooltipPadding = Border.Padding * scale;
             var textPadding = new SizeF(12f * scale, 2f * scale);
 
-            var lines = tooltip.GetLines().ToList();
-
             var lineSizes = new List<SizeF>();
 
-            lines.ForEach(line =>
+
+            var lines = linesQuery.Select(line =>
             {
-                if (line.LeftText.Type == TooltipTextType.Currency && Currency.Source != null)
+                if (line is ICurrencyLine && Currency.Source != null)
                 {
-                    var regexGold = new Regex(@"(\d+)(g)");
-                    var regexSilver = new Regex(@"(\d{1,2})(s)");
-                    var regexCopper = new Regex(@"(\d{1,2})(c)");
+                    var currency = line as ICurrencyLine;
+                    var sb = new StringBuilder();
+                    var gold = currency.GetGold();
+                    var silver = currency.GetSilver();
+                    var copper = currency.GetCopper();
 
-                    var text = line.LeftText.Text;
 
-                    var gold = regexGold.Match(text);
-                    if (gold.Success) text = $"{text.Substring(0, gold.Index)}{gold.Value.Substring(0, gold.Value.Length - 1)}  {goldsymbol}  {text.Substring(gold.Index + gold.Value.Length)}";
-                    var silver = regexSilver.Match(text);
-                    if (silver.Success) text = $"{text.Substring(0, silver.Index)}{silver.Value.Substring(0, silver.Value.Length - 1)}  {silversymbol}{text.Substring(silver.Index + silver.Value.Length)}";
-                    var copper = regexCopper.Match(text);
-                    if (copper.Success) text = $"{text.Substring(0, copper.Index)}{copper.Value.Substring(0, copper.Value.Length - 1)}  {coppersymbol}  {text.Substring(copper.Index + copper.Value.Length)}";
+                    sb.Append("Sell Price: ");
+                    var total = copper + (silver * 100) + (gold * 10000);
+                    if (gold > 0) sb.Append($"{gold}  {goldsymbol}   ");
+                    if (silver > 0) sb.Append($"{silver}  {silversymbol} ");
+                    if (copper > 0) sb.Append($"{copper}  {coppersymbol}");
+                    if (total <= 0) sb.Clear().Append("No sell price");
 
-                    line.LeftText = new TooltipText(text, line.LeftText.Color, line.LeftText.Type);
-
-                }
-
-                switch(line.LeftText.Type)
+                    return new CurrencyLine(sb.ToString().Trim()) as ITooltipLine;
+                } else
                 {
-                    case TooltipTextType.Default:
-                    case TooltipTextType.Currency:
-                        var leftSize = TextMeasurer.Measure(line.LeftText.Text, contentRenderer);
-                        var rightSize = TextMeasurer.Measure(line.RightText.Text, contentRenderer);
-
-                        var lineWidth = leftSize.Width + rightSize.Width + textPadding.Width;
-                        var lineHeight = MathF.Max(leftSize.Height, rightSize.Height);
-
-                        lineSizes.Add(new SizeF(lineWidth, lineHeight));
-                        break;
-                    case TooltipTextType.Paragraph:
-                        lineSizes.Add(new SizeF(0, 0));
-                        break;
+                    return line;
                 }
-            });
+            }).ToArray();
+            foreach(var line in lines)
+            {
+                if (line is IParagraphLine)
+                {
+                    lineSizes.Add(new SizeF(0, 0));
+                } else
+                {
+                    var leftSize = (line as ILeftText)?.Measure(contentRenderer) ?? SizeF.Empty;
+                    var rightSize = (line as IRightText)?.Measure(contentRenderer) ?? SizeF.Empty;
+
+                    var lineWidth = leftSize.Width + rightSize.Width + textPadding.Width;
+                    var lineHeight = MathF.Max(leftSize.Height, rightSize.Height);
+
+                    lineSizes.Add(new SizeF(lineWidth, lineHeight));
+                }
+            }
 
             var width = MathF.Max(titleSize.Width, lineSizes.Max(size => size.Width));
             width += titlePadding;
             wrappedContentRenderer.WrappingWidth = width;
             wrapping.WrapTextWidth = wrappedContentRenderer.WrappingWidth;
-            for(var i = 0; i < lines.Count;i++)
-            {
-                var line = lines[i];
 
-                if (line.LeftText.Type == TooltipTextType.Paragraph)
-                {
-                    lineSizes[i] = TextMeasurer.Measure(line.LeftText.Text, wrappedContentRenderer);
-                }
+            foreach(var entry in lines.Select((line, i) => new { Line = line, Index = i })) {
+                var line = entry.Line;
+
+                if (line is IParagraphLine)
+                    lineSizes[entry.Index] = line.Measure(wrappedContentRenderer);
             }
 
             var height = titleSize.Height + lineSizes.Sum(line => line.Height) + lineSizes.Count * textPadding.Height;
@@ -108,9 +117,9 @@ namespace Awv.Games.WoW.Graphics
             width += tooltipPadding.Width * 2;
             height += tooltipPadding.Height * 2;
 
-            var gen = GenerateBackground((int)width, (int)height, scale);
+            var tooltip = GenerateBackground((int)width, (int)height, scale);
 
-            gen.Mutate(img =>
+            tooltip.Mutate(img =>
             {
                 var yoffset = tooltipPadding.Height;
                 if (Emblem != null)
@@ -120,70 +129,92 @@ namespace Awv.Games.WoW.Graphics
 
                 yoffset += titleSize.Height + textPadding.Height;
 
-                for (var i = 0; i < lines.Count;i++)
+                foreach (var entry in lines.Zip(lineSizes).Select(x => new { Line = x.First, Size = x.Second }))
                 {
-                    var line = lines[i];
-                    var size = lineSizes[i];
+                    var line = entry.Line;
+                    var size = entry.Size;
 
-                    switch (line.LeftText.Type)
+                    if (line is IParagraphLine)
                     {
-                        case TooltipTextType.Default:
+                        var paragraph = (line as IParagraphLine).GetParagraph();
+
+                        img.DrawText(wrapping, paragraph.GetText(), wrappedContentRenderer.Font, paragraph.GetColor(), new PointF(tooltipPadding.Width, yoffset));
+                    } else if (line is CurrencyLine)
+                    {
+                        var text = (line as CurrencyLine?)?.GetLeftText();
+                        var value = text?.GetText();
+                        img.DrawText(value, contentRenderer.Font, text.GetColor(), new PointF(tooltipPadding.Width, yoffset));
+
+                        if (Currency.Source != null)
+                        {
+                            //Currency.Tile();
+                            //Currency.Scale(scale);
+                            var gold = Currency.Gold.Clone();
+                            var silver = Currency.Silver.Clone();
+                            var copper = Currency.Copper.Clone();
+
+
+
+                            gold.Mutate(x => x.Resize(new Size((int)(scale * gold.Width), (int)(scale * gold.Height))));
+                            silver.Mutate(x => x.Resize(new Size((int)(scale * silver.Width), (int)(scale * silver.Height))));
+                            copper.Mutate(x => x.Resize(new Size((int)(scale * copper.Width), (int)(scale * copper.Height))));
+
+                            var tilesizeOffset = (int)(scale * Currency.TileSize / 4);
+                            if (value.Contains((goldsymbol)))
                             {
-                                var left = line.LeftText;
-                                var right = line.RightText;
-                                var rightSize = TextMeasurer.Measure(right.Text, contentRenderer);
-
-                                img.DrawText(left.Text, contentRenderer.Font, left.Color, new PointF(tooltipPadding.Width, yoffset));
-                                img.DrawText(right.Text, contentRenderer.Font, right.Color, new PointF(width - tooltipPadding.Width - rightSize.Width, yoffset));
-                                break;
+                                var goldx = TextMeasurer.Measure(value.Substring(0, value.IndexOf(goldsymbol)), contentRenderer).Width - tilesizeOffset;
+                                img.DrawImage(gold, new Point((int)(tooltipPadding.Width + goldx), (int)yoffset - tilesizeOffset), 1f);
                             }
-                        case TooltipTextType.Currency:
+                            if (value.Contains((silversymbol)))
                             {
-                                var left = line.LeftText;
-                                img.DrawText(left.Text, contentRenderer.Font, left.Color, new PointF(tooltipPadding.Width, yoffset));
-
-                                if (Currency.Source != null)
-                                {
-                                    var gold = Currency.Gold.Clone();
-                                    var silver = Currency.Silver.Clone();
-                                    var copper = Currency.Copper.Clone();
-
-                                    gold.Mutate(x => x.Resize(new Size((int)(scale * gold.Width), (int)(scale * gold.Height))));
-                                    silver.Mutate(x => x.Resize(new Size((int)(scale * silver.Width), (int)(scale * silver.Height))));
-                                    copper.Mutate(x => x.Resize(new Size((int)(scale * copper.Width), (int)(scale * copper.Height))));
-
-                                    var tilesizeOffset = (int)(scale * Currency.TileSize / 4);
-                                    if (left.Text.Contains((goldsymbol)))
-                                    {
-                                        var goldx = TextMeasurer.Measure(left.Text.Substring(0, left.Text.IndexOf(goldsymbol)), contentRenderer).Width - tilesizeOffset;
-                                        img.DrawImage(gold, new Point((int)(tooltipPadding.Width + goldx), (int)yoffset - tilesizeOffset), 1f);
-                                    }
-                                    if (left.Text.Contains((silversymbol)))
-                                    {
-                                        var silverx = TextMeasurer.Measure(left.Text.Substring(0, left.Text.IndexOf(silversymbol)), contentRenderer).Width - tilesizeOffset;
-                                        img.DrawImage(silver, new Point((int)(tooltipPadding.Width + silverx), (int)yoffset - tilesizeOffset), 1f);
-                                    }
-                                    if (left.Text.Contains((coppersymbol)))
-                                    {
-                                        var copperx = TextMeasurer.Measure(left.Text.Substring(0, left.Text.IndexOf(coppersymbol)), contentRenderer).Width - tilesizeOffset;
-                                        img.DrawImage(copper, new Point((int)(tooltipPadding.Width + copperx), (int)yoffset - tilesizeOffset), 1f);
-                                    }
-                                }
-                                break;
+                                var silverx = TextMeasurer.Measure(value.Substring(0, value.IndexOf(silversymbol)), contentRenderer).Width - tilesizeOffset;
+                                img.DrawImage(silver, new Point((int)(tooltipPadding.Width + silverx), (int)yoffset - tilesizeOffset), 1f);
                             }
-                        case TooltipTextType.Paragraph:
+                            if (value.Contains((coppersymbol)))
                             {
-                                var left = line.LeftText;
-                                img.DrawText(wrapping, left.Text, wrappedContentRenderer.Font, left.Color, new PointF(tooltipPadding.Width, yoffset));
-                                break;
+                                var copperx = TextMeasurer.Measure(value.Substring(0, value.IndexOf(coppersymbol)), contentRenderer).Width - tilesizeOffset;
+                                img.DrawImage(copper, new Point((int)(tooltipPadding.Width + copperx), (int)yoffset - tilesizeOffset), 1f);
                             }
+                        }
+                    } else if (line is ILeftText || line is IRightText)
+                    {
+                        var leftText = (line as ILeftText)?.GetLeftText();
+                        var rightText = (line as IRightText)?.GetRightText();
+
+                        if (leftText != null)
+                        {
+                            img.DrawText(leftText.GetText(), contentRenderer.Font, leftText.GetColor(), new PointF(tooltipPadding.Width, yoffset));
+                        }
+                        if (rightText != null)
+                        {
+                            var rightSize = rightText.Measure(contentRenderer);
+                            img.DrawText(rightText.GetText(), contentRenderer.Font, rightText.GetColor(), new PointF(width - tooltipPadding.Width - rightSize.Width, yoffset));
+                        }
                     }
 
                     yoffset += size.Height + textPadding.Height;
                 }
             });
 
-            return gen;
+            if (icon != null)
+            {
+
+                icon.Mutate(img => img.Resize(new Size((int)(scale * icon.Width), (int)(scale * icon.Height))));
+                var tooltipWithIcon = new Image<Rgba32>(tooltip.Width + icon.Width, Math.Max(tooltip.Height, icon.Height));
+                tooltipWithIcon.Mutate(img =>
+                {
+                    var yoffset = 0;
+                    if (Emblem != null)
+                        yoffset = (int)(EmblemAnchorY * scale);
+                    img.DrawImage(icon, new Point(0, yoffset), 1f);
+                    img.DrawImage(tooltip, new Point(icon.Width, 0), 1f);
+                });
+
+                return tooltipWithIcon;
+            } else
+            {
+                return tooltip;
+            }
         }
 
         public Image<Rgba32> GenerateBackground(int width, int height, float scale)

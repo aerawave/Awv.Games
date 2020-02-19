@@ -40,6 +40,7 @@ namespace Awv.Games.WoW.Items
         public TooltipText GetTitle() => new TooltipText(GetName(), TooltipColors.ToColor(Rarity));
         #endregion
         #region IItem Accessors
+        public IGraphic GetIcon() => Icon;
         public ItemRarity GetRarity() => Rarity;
         public virtual bool IsCorrupted() => false;
         public string GetName() => Name;
@@ -56,112 +57,11 @@ namespace Awv.Games.WoW.Items
         public string GetFlavor() => Flavor;
         public CurrencyCount GetSellPrice() => SellPrice;
         #endregion
-        #region ITooltip Methods
-        public virtual IEnumerable<ITooltipSegment> GetSegments()
-        {
-            var segments = new List<ITooltipSegment>();
-            var core = GetCoreSegment();
-            var effects = GetEffectsSegment();
-
-            segments.Add(GetUpperSegment());
-            if (core != null) segments.Add(core);
-            if (effects != null) segments.Add(effects);
-            segments.Add(GetLowerSegment());
-
-            return segments;
-        }
-        #endregion
         #region Item Methods
-        public virtual ITooltipSegment GetCoreSegment() => null;
-        public virtual ITooltipSegment GetUpperSegment()
-        {
-            var equipment = this as IEquipment;
-            var list = new List<TooltipText>();
-
-            if (this is IEquipment && equipment.IsMultiEquipment())
-            {
-                var title = GetTitle();
-                list.Add(new TooltipText(equipment.GetMultiPieceName(), title.Color));
-            }
-
-            var flags = GetSpecialItemFlags();
-            if (flags.Count() > 0)
-                list.Add(new TooltipText(string.Join(" ", flags), TooltipColors.Lime));
-
-            var usage = GetUsage();
-            if (usage != null)
-                list.Add(new TooltipText(usage, TooltipColors.Yellow));
-
-            list.Add(new TooltipText($"Item Level {GetItemLevel().GetLevel()}", TooltipColors.Yellow));
-
-            var bindsOn = GetBindsOn();
-            if (!string.IsNullOrWhiteSpace(bindsOn))
-                list.Add(new TooltipText(bindsOn, TooltipColors.White));
-
-            var uniqueness = GetUniqueness();
-            if (!string.IsNullOrWhiteSpace(uniqueness))
-                list.Add(new TooltipText(uniqueness, TooltipColors.White));
-
-            var type = GetItemType();
-            if (!string.IsNullOrWhiteSpace(type))
-                list.Add(new TooltipText(type, TooltipColors.ItemType));
-
-            return new TooltipSegment { LeftTexts = list };
-        }
-        public virtual ITooltipSegment GetEffectsSegment()
-        {
-            var list = new List<TooltipText>();
-
-            var effects = GetEffects();
-
-            foreach (var effect in effects)
-                list.Add(new TooltipText($"{effect.GetOrigin()}: {effect.GetEffect()}", effect.GetColor(), TooltipTextType.Paragraph));
-
-            return new TooltipSegment { LeftTexts = list };
-        }
-        public virtual ITooltipSegment GetLowerSegment()
-        {
-            var list = new List<TooltipText>();
-
-            var level = GetRequiredLevel();
-            if (level != null)
-                list.Add(new TooltipText($"Requires Level {level.GetLevel()}", TooltipColors.Common));
-
-            if (this is IEquipment)
-            {
-                // set name
-                // set pieces
-                // set effects
-
-                // also Azerite Gear
-            }
-
-            var duration = GetDuration();
-            if (duration.HasValue)
-                list.Add(new TooltipText($"Duration: {duration.Value.GetTooltipDisplayString()}", TooltipColors.Common));
-
-            var stack = GetMaxStack();
-            if (stack > 0)
-                list.Add(new TooltipText($"Max Stack: {stack}", TooltipColors.Common));
-
-            var flavor = GetFlavor();
-            if (!string.IsNullOrWhiteSpace(flavor))
-                list.Add(new TooltipText($"\"{flavor}\"", TooltipColors.Flavor, TooltipTextType.Paragraph));
-
-            var sellPrice = GetSellPrice();
-            if (sellPrice != null)
-            {
-                var sellPriceString = sellPrice.ToString();
-                if (string.IsNullOrWhiteSpace(sellPriceString)) sellPriceString = "No sell price";
-                else sellPriceString = $"Sell Price: {sellPriceString}";
-                list.Add(new TooltipText(sellPriceString, TooltipColors.Common, TooltipTextType.Currency));
-            }
-
-            return new TooltipSegment { LeftTexts = list };
-        }
         public virtual Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale)
         {
-            var tt = generator.Generate(this, scale);
+            var provider = new ItemTooltipProvider();
+            var tt = generator.Generate(provider, this, scale);
 
             if (Icon != null)
             {

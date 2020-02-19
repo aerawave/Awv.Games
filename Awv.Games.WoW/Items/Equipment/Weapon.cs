@@ -25,21 +25,5 @@ namespace Awv.Games.WoW.Items.Equipment
         public IEnumerable<IDamageRange> GetDamageRanges() => AdditionalDamage.ToArray().Prepend(DefaultDamage);
         public decimal GetAttackSpeed() => AttackSpeed;
         #endregion
-        #region ITooltip Methods
-        public override ITooltipSegment GetCoreSegment()
-        {
-            var segment = base.GetCoreSegment() as TooltipSegment;
-
-            segment.LeftTexts.Add(DefaultDamage.GetDisplayString());
-            segment.RightTexts.Add($"Speed {AttackSpeed.ToString("N2")}");
-
-            foreach (var damage in AdditionalDamage)
-                segment.LeftTexts.Add($"+ {damage.GetDisplayString()}");
-
-            segment.LeftTexts.Add($"({DamagePerSecond.ToString("N1")} damage per second)");
-
-            return segment;
-        }
-        #endregion
     }
 }
