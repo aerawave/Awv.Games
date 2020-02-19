@@ -6,9 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Awv.Games.Core" Version="1.0.0" />
     <PackageReference Include="Awv.Games.WoW" Version="1.0.0" />
     <PackageReference Include="Awv.Games.WoW.Data" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\Tooltips\Fill-Azerite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Tooltips\Fill-Corrupt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Tooltips\Fill-Default.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

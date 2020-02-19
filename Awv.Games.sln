@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awv.Games.WoW", "Awv.Games.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awv.Games.WoW.Data", "Awv.Games.WoW.Data\Awv.Games.WoW.Data.csproj", "{75A95C71-4496-4ABB-B91D-410EFAF4AC04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleProject", "ExampleProject\ExampleProject.csproj", "{D5750057-F5AE-44A4-BB89-ADAB61BDDC46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleProject", "ExampleProject\ExampleProject.csproj", "{D5750057-F5AE-44A4-BB89-ADAB61BDDC46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
