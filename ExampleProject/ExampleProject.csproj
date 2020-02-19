@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Awv.Games.WoW.Data\Awv.Games.WoW.Data.csproj" />
+    <PackageReference Include="Awv.Games.Core" Version="1.0.0" />
+    <PackageReference Include="Awv.Games.WoW" Version="1.0.0" />
+    <PackageReference Include="Awv.Games.WoW.Data" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
