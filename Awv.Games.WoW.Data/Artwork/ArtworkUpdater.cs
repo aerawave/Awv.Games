@@ -35,6 +35,9 @@ namespace Awv.Games.WoW.Data.Artwork
         /// <param name="outputPngDirectory">The directory into which PNG images will be exported</param>
         public ArtworkUpdater(string updaterJson, string inputBlpDirectory, string outputPngDirectory)
         {
+            if (string.IsNullOrWhiteSpace(updaterJson)) throw new ArgumentNullException(nameof(updaterJson), "A JSON config file path is required to store progress.");
+            if (string.IsNullOrWhiteSpace(inputBlpDirectory)) throw new ArgumentNullException(nameof(inputBlpDirectory), "The input BLP directory is required.");
+            if (string.IsNullOrWhiteSpace(outputPngDirectory)) throw new ArgumentNullException(nameof(outputPngDirectory), "The output PNG directory is required.");
             UpdaterJson = updaterJson;
             InputBlpDirectory = inputBlpDirectory;
             OutputPngDirectory = outputPngDirectory;
