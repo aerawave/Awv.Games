@@ -2,17 +2,16 @@
 using Awv.Games.WoW.Data;
 using Awv.Games.WoW.Data.Artwork;
 using Awv.Games.WoW.Data.Items;
-using Awv.Games.WoW.Graphics;
 using Awv.Games.WoW.Items;
 using Awv.Games.WoW.Items.Effects;
 using Awv.Games.WoW.Items.Equipment;
 using Awv.Games.WoW.Levels;
 using Awv.Games.WoW.Stats;
 using Awv.Games.WoW.Tooltips;
+using ExampleProject.CustomTooltips;
 using SixLabors.ImageSharp;
 using System;
 using System.IO;
-using System.Text;
 
 namespace ExampleProject
 {
@@ -20,7 +19,9 @@ namespace ExampleProject
     {
         public static void Main(string[] args)
         {
-            CustomWoWItems();
+            Console.WriteLine("Please select a method to run.");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -32,11 +33,15 @@ namespace ExampleProject
         /// </summary>
         static void UpdateArtwork()
         {
-            string WoWDirectory = null;
-            Alert.Check(WoWDirectory, nameof(WoWDirectory), $"the {nameof(UpdateArtwork)} method", @"This directory will likely be at 'C:\Program Files (x86)\World of Warcraft' on Windows.");
-            var blpDirectory = Path.Combine(WoWDirectory, "BlizzardInterfaceArt");
+            // Set blpDirectory to your BlizzardInterfaceArt directory
+            string blpDirectory = null;
+            // Set pngDirectory to where you want to output PNG files.
             var pngDirectory = Path.Combine(Directory.GetCurrentDirectory(), "BlizzardInterfaceArt");
+            // Create an ArtworkUpdater.
+            // The "updater.json" is a config file used to track where the updater is.
+            // Used in the event that you need to pause the operation and resume it later.
             var updater = new ArtworkUpdater("updater.json", blpDirectory, pngDirectory);
+            // Start it! It will log process as it goes, as well as report any errors to the aforementioned JSON file.
             updater.Start();
         }
 
@@ -143,8 +148,8 @@ namespace ExampleProject
 
             if (withIcon)
             {
+                // This should be the PNG export location with '/Interface/ICONS' appended to the end.
                 string iconDirectory = null;
-                Alert.Check(iconDirectory, nameof(iconDirectory), $"the {nameof(GetDreadbladesFate)} function", "This should be the PNG export location with '/Interface/ICONS' appended to the end.");
                 var iconGen = new GraphicFileGenerator(iconDirectory);
                 item.Icon = iconGen.FindSpecific("inv_sword_1h_artifactskywall_d_01");
             }
@@ -159,20 +164,40 @@ namespace ExampleProject
             return item;
         }
 
-    }
-
-    public static class Alert
-    {
-        public static void Check(string value, string variableName, string location, string resolutionAdvice)
+        static void CustomTooltips()
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                var alert = new StringBuilder();
-                alert.AppendLine($"Have you set the {variableName} variable in {location}?");
-                alert.AppendLine("This is required.");
-                alert.AppendLine(resolutionAdvice);
-                throw new Exception(alert.ToString());
-            }
+            var drawIcon = true;
+            var fireball = GetFireball(drawIcon);
+            var provider = new SpellTooltipProvider { DrawIcon = drawIcon };
+            var generator = TooltipGenerators.DefaultGenerator;
+
+            var tooltip = generator.Generate(provider, fireball, 4f);
+            using var file = File.Open("tooltip.png", FileMode.Create);
+            tooltip.SaveAsPng(file);
         }
+
+        static Spell GetFireball(bool withIcon)
+        {
+            var spell = new Spell();
+
+            spell.Name = "Fireball";
+            spell.ResourceCost = 601;
+            spell.Resource = "Mana";
+            spell.Range = 35;
+            spell.CastTime = 2.25M;
+
+            spell.Description = "Hurls a fiery ball that causes 952 to 1211 Fire damage and an additional 116 Fire damage over 8 sec.";
+
+            if (withIcon)
+            {
+                // This should be the PNG export location with '/Interface/ICONS' appended to the end.
+                string iconDirectory = null;
+                var iconGen = new GraphicFileGenerator(iconDirectory);
+                spell.Icon = iconGen.FindSpecific("spell_fire_flamebolt");
+            }
+
+            return spell;
+        }
+
     }
 }
