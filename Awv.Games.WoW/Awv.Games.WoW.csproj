@@ -9,8 +9,8 @@
     <RepositoryType></RepositoryType>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <PackageTags>aerawave wow world of warcraft</PackageTags>
-    <PackageReleaseNotes>Fixed an issue where the item tooltip provider would say an item requires level 0 if no level is specified.</PackageReleaseNotes>
-    <Version>1.0.3</Version>
+    <PackageReleaseNotes>Couple of small fixes here and there.</PackageReleaseNotes>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
