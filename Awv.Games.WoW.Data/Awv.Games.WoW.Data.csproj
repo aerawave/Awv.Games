@@ -11,7 +11,8 @@ Then enables exporting of that data (for instance, in the case of items)
 https://wow.tools/ literally made this entire Awv.Games.WoW project possible.</Description>
     <RepositoryUrl>https://github.com/aerawave/Awv.Games</RepositoryUrl>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
-    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <PackageReleaseNotes>Couple of small fixes here and there.</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
