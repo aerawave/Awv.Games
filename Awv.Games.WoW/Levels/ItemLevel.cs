@@ -49,10 +49,10 @@ namespace Awv.Games.WoW.Levels
         /// </summary>
         /// <param name="rarity"></param>
         /// <returns></returns>
-        public int GetDPS(ItemRarity rarity)
+        public decimal GetDPS(ItemRarity rarity)
         {
             var calculatedLevel = CalculateLevel(rarity);
-            return calculatedLevel - (int)(calculatedLevel * (.86 - (calculatedLevel > 160 ? ((double)(calculatedLevel - 160) / ArbitraryTurnover) : 0)));
+            return calculatedLevel - (decimal)(calculatedLevel * (.86 - (calculatedLevel > 160 ? ((double)(calculatedLevel - 160) / ArbitraryTurnover) : 0)));
         }
     }
 }

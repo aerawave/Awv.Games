@@ -6,6 +6,6 @@ namespace Awv.Games.WoW.Levels.Interface
     {
         int CalculateLevel(ItemRarity rarity);
         int GetTotalStats(ItemRarity rarity);
-        int GetDPS(ItemRarity rarity);
+        decimal GetDPS(ItemRarity rarity);
     }
 }

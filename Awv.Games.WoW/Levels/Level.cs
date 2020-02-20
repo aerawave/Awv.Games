@@ -21,7 +21,7 @@ namespace Awv.Games.WoW.Levels
         /// </summary>
         /// <param name="rarity">The rarity to calculate the <see cref="IItemLevel"/> for</param>
         /// <returns>The calculated <see cref="IItemLevel"/></returns>
-        public IItemLevel GetItemLevel(ItemRarity rarity)
+        public ItemLevel GetItemLevel(ItemRarity rarity)
         {
             var level = Value;
             var itemLevel = new ItemLevel { CoreLevel = 5 };
@@ -87,5 +87,7 @@ namespace Awv.Games.WoW.Levels
         public string ToString(IFormatProvider provider) => Value.ToString(provider);
         public string ToString(string format) => Value.ToString(format);
         public string ToString(string format, IFormatProvider provider) => Value.ToString(format, provider);
+
+        IItemLevel IPlayerLevel.GetItemLevel(ItemRarity rarity) => GetItemLevel(rarity);
     }
 }

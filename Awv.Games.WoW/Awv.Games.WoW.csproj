@@ -9,8 +9,8 @@
     <RepositoryType></RepositoryType>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <PackageTags>aerawave wow world of warcraft</PackageTags>
-    <PackageReleaseNotes>Couple of small fixes here and there.</PackageReleaseNotes>
-    <Version>1.0.4</Version>
+    <PackageReleaseNotes>Updated some methods in ItemLevel and Level.</PackageReleaseNotes>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
