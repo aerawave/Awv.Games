@@ -11,6 +11,8 @@ namespace Awv.Games.WoW.Tooltips
         {
             Text = text;
         }
+        public ParagraphLine(TooltipText text)
+            : this(text as ITooltipText) { }
         public ITooltipText GetParagraph() => Text;
         public SizeF Measure(RendererOptions renderer) => TextMeasurer.Measure(GetParagraph().GetText(), renderer);
     }
