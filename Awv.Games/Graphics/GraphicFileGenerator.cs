@@ -1,5 +1,6 @@
 ﻿using Awv.Automation.Generation;
 using Awv.Automation.Generation.Interface;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -11,6 +12,8 @@ namespace Awv.Games.Graphics
 
         public GraphicFileGenerator(string directory)
         {
+            if (string.IsNullOrWhiteSpace(directory))
+                throw new ArgumentNullException(nameof(directory), "Expected graphic file directory.");
             FileGenerator = new FilePathGenerator(directory);
         }
 

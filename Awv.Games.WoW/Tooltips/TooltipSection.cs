@@ -9,13 +9,13 @@ namespace Awv.Games.WoW.Tooltips
         #region Properties
         public List<ITooltipLine> Lines { get; set; } = new List<ITooltipLine>();
         #endregion
-        #region ITooltipSegment Accessors
+        #region ITooltipSection Accessors
         public IEnumerable<ITooltipLine> GetLines() => Lines;
         #endregion
         #region Methods
-        public void Append(ITooltipSection segment)
+        public void Append(ITooltipSection section)
         {
-            var lines = segment.GetLines();
+            var lines = section.GetLines();
 
             foreach (var line in lines)
                 Lines.Add(line);

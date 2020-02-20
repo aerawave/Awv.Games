@@ -9,7 +9,7 @@ namespace Awv.Games.WoW.Tooltips.Interface
         bool ShouldDrawIcon();
         Image<Rgba32> GetIcon();
         TooltipText GetTitle();
-        IEnumerable<ITooltipSection> GetSegments();
+        IEnumerable<ITooltipSection> GetSections();
     }
 
     public interface ITooltipProvider<TData>
@@ -17,6 +17,6 @@ namespace Awv.Games.WoW.Tooltips.Interface
         bool ShouldDrawIcon(TData target);
         Image<Rgba32> GetIcon(TData target);
         TooltipText GetTitle(TData target);
-        IEnumerable<ITooltipSection> GetSegments(TData target);
+        IEnumerable<ITooltipSection> GetSections(TData target);
     }
 }

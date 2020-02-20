@@ -15,60 +15,60 @@ namespace Awv.Games.WoW.Tooltips
         public bool DrawIcon { get; set; } = true;
 
         public bool ShouldDrawIcon(IItem item) => DrawIcon;
-        public IEnumerable<ITooltipSection> GetSegments(IItem item)
+        public IEnumerable<ITooltipSection> GetSections(IItem item)
         {
-            var segments = new List<ITooltipSection>();
+            var sections = new List<ITooltipSection>();
 
-            segments.Add(GetHeaderSegment(item));
-            segments.Add(GetCoreSegment(item));
-            segments.Add(GetStatsSegment(item));
-            segments.Add(GetEffectsSegment(item));
-            segments.Add(GetFooterSegment(item));
+            sections.Add(GetHeader(item));
+            sections.Add(GetCore(item));
+            sections.Add(GetStats(item));
+            sections.Add(GetEffects(item));
+            sections.Add(GetFooter(item));
 
-            return segments;
+            return sections;
         }
 
         public TooltipText GetTitle(IItem item) => new TooltipText(item.GetName(), TooltipColors.ToColor(item.GetRarity()));
 
-        public ITooltipSection GetHeaderSegment(IItem item)
+        public ITooltipSection GetHeader(IItem item)
         {
             var equipment = item as IEquipment;
-            var segment = new TooltipSection();
+            var section = new TooltipSection();
 
             if (item is IEquipment && equipment.IsMultiEquipment())
             {
                 var title = GetTitle(item);
-                segment.Lines.Add(new LeftText(new TooltipText(equipment.GetMultiPieceName(), title.Color)));
+                section.Lines.Add(new LeftText(new TooltipText(equipment.GetMultiPieceName(), title.Color)));
             }
 
             var flags = item.GetSpecialItemFlags();
             if (flags.Count() > 0)
-                segment.Lines.Add(new LeftText(new TooltipText(string.Join(" ", flags), TooltipColors.Lime)));
+                section.Lines.Add(new LeftText(new TooltipText(string.Join(" ", flags), TooltipColors.Lime)));
 
             var usage = item.GetUsage();
             if (usage != null)
-                segment.Lines.Add(new LeftText(new TooltipText(usage, TooltipColors.Yellow)));
+                section.Lines.Add(new LeftText(new TooltipText(usage, TooltipColors.Yellow)));
 
-            segment.Lines.Add(new LeftText(new TooltipText($"Item Level {item.GetItemLevel().GetLevel()}", TooltipColors.Yellow)));
+            section.Lines.Add(new LeftText(new TooltipText($"Item Level {item.GetItemLevel().GetLevel()}", TooltipColors.Yellow)));
 
             var bindsOn = item.GetBindsOn();
             if (!string.IsNullOrWhiteSpace(bindsOn))
-                segment.Lines.Add(new LeftText(bindsOn));
+                section.Lines.Add(new LeftText(bindsOn));
 
             var uniqueness = item.GetUniqueness();
             if (!string.IsNullOrWhiteSpace(uniqueness))
-                segment.Lines.Add(new LeftText(uniqueness));
+                section.Lines.Add(new LeftText(uniqueness));
 
             var type = item.GetItemType();
             if (!string.IsNullOrWhiteSpace(type))
-                segment.Lines.Add(new LeftText(new TooltipText(type, TooltipColors.ItemType)));
+                section.Lines.Add(new LeftText(new TooltipText(type, TooltipColors.ItemType)));
 
-            return segment;
+            return section;
         }
 
-        public ITooltipSection GetCoreSegment(IItem item)
+        public ITooltipSection GetCore(IItem item)
         {
-            var segment = new TooltipSection();
+            var section = new TooltipSection();
             if (item is IEquipment)
             {
                 var equipment = item as IEquipment;
@@ -80,7 +80,7 @@ namespace Awv.Games.WoW.Tooltips
                     typeLine.LeftText = new LeftText(type.Slot).Text;
                     if (type.Definition?.Name != null)
                         typeLine.RightText = new RightText(type.Definition.Name).Text;
-                    segment.Lines.Add(typeLine);
+                    section.Lines.Add(typeLine);
                 }
             }
             if (item is IWeapon)
@@ -94,27 +94,27 @@ namespace Awv.Games.WoW.Tooltips
                 var attackLine = new LeftText(firstAttack.GetDisplayString())
                     + new RightText($"Speed {attackSpeed.ToString("N2")}");
 
-                segment.Lines.Add(attackLine);
+                section.Lines.Add(attackLine);
 
                 foreach (var damage in extra)
-                    segment.Lines.Add(new LeftText($"+ {damage.GetDisplayString()}"));
+                    section.Lines.Add(new LeftText($"+ {damage.GetDisplayString()}"));
                 var damagePerSecond = attackSpeed > 0 ? damages.Sum(damage => damage.GetMinimum() + damage.GetMaximum()) / (2 * attackSpeed) : 0;
 
-                segment.Lines.Add(new LeftText($"({damagePerSecond.ToString("N1")} damage per second)"));
+                section.Lines.Add(new LeftText($"({damagePerSecond.ToString("N1")} damage per second)"));
 
-                return segment;
+                return section;
             }
             if (item is IArmor)
             {
                 var armor = item as IArmor;
-                segment.Lines.Add(new LeftText($"{armor.GetArmorPoints()} Armor"));
+                section.Lines.Add(new LeftText($"{armor.GetArmorPoints()} Armor"));
             }
-            return segment;
+            return section;
         }
 
-        public ITooltipSection GetStatsSegment(IItem item)
+        public ITooltipSection GetStats(IItem item)
         {
-            var segment = new TooltipSection();
+            var section = new TooltipSection();
 
             if (item is IEquipment)
             {
@@ -126,10 +126,10 @@ namespace Awv.Games.WoW.Tooltips
                 var tertiaryStats = stats.Where(stat => stat.GetStatType() == StatType.Tertiary).ToList();
                 var corruptionStats = stats.Where(stat => stat.GetStatType() == StatType.Corruption).ToList();
 
-                primaryStats.ForEach(stat => segment.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.Common))));
-                secondaryStats.ForEach(stat => segment.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon))));
-                tertiaryStats.ForEach(stat => segment.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon))));
-                corruptionStats.ForEach(stat => segment.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.CorruptEffect))));
+                primaryStats.ForEach(stat => section.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.Common))));
+                secondaryStats.ForEach(stat => section.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon))));
+                tertiaryStats.ForEach(stat => section.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.Uncommon))));
+                corruptionStats.ForEach(stat => section.Lines.Add(new LeftText(new TooltipText(stat.GetDisplayString(), TooltipColors.CorruptEffect))));
 
                 // TODO (?):
                 // artifact relic slots
@@ -139,36 +139,36 @@ namespace Awv.Games.WoW.Tooltips
 
                 var durability = equipment.GetDuration();
                 if (equipment.HasDurability())
-                    segment.Lines.Add(new LeftText($"Durability {durability} / {durability}"));
+                    section.Lines.Add(new LeftText($"Durability {durability} / {durability}"));
 
             }
 
             // TODO (?):
             // class restrictions
 
-            return segment;
+            return section;
         }
 
-        public ITooltipSection GetEffectsSegment(IItem item)
+        public ITooltipSection GetEffects(IItem item)
         {
-            var segment = new TooltipSection();
+            var section = new TooltipSection();
 
             var effects = item.GetEffects();
 
             foreach (var effect in effects)
-                segment.Lines.Add(new ParagraphLine(new TooltipText($"{effect.GetOrigin()}: {effect.GetEffect()}", effect.GetColor())));
+                section.Lines.Add(new ParagraphLine(new TooltipText($"{effect.GetOrigin()}: {effect.GetEffect()}", effect.GetColor())));
 
-            return segment;
+            return section;
         }
 
-        public ITooltipSection GetFooterSegment(IItem item)
+        public ITooltipSection GetFooter(IItem item)
         {
-            var segment = new TooltipSection();
+            var section = new TooltipSection();
 
 
             var level = item.GetRequiredLevel()?.GetLevel();
             if (level.HasValue && level.Value > 0)
-                segment.Lines.Add(new LeftText($"Requires Level {level.Value}"));
+                section.Lines.Add(new LeftText($"Requires Level {level.Value}"));
 
             if (this is IEquipment)
             {
@@ -182,15 +182,15 @@ namespace Awv.Games.WoW.Tooltips
 
             var duration = item.GetDuration();
             if (duration.HasValue)
-                segment.Lines.Add(new LeftText($"Duration: {duration.Value.GetTooltipDisplayString()}"));
+                section.Lines.Add(new LeftText($"Duration: {duration.Value.GetTooltipDisplayString()}"));
 
             var stack = item.GetMaxStack();
             if (stack > 0)
-                segment.Lines.Add(new LeftText($"Max Stack: {stack}"));
+                section.Lines.Add(new LeftText($"Max Stack: {stack}"));
 
             var flavor = item.GetFlavor();
             if (!string.IsNullOrWhiteSpace(flavor))
-                segment.Lines.Add(new ParagraphLine(new TooltipText($"\"{flavor}\"", TooltipColors.Flavor)));
+                section.Lines.Add(new ParagraphLine(new TooltipText($"\"{flavor}\"", TooltipColors.Flavor)));
 
             var sellPrice = item.GetSellPrice();
             if (sellPrice != null)
@@ -198,10 +198,10 @@ namespace Awv.Games.WoW.Tooltips
                 var gold = sellPrice.GetAmount("g");
                 var silver = sellPrice.GetAmount("s");
                 var copper = sellPrice.GetAmount("c");
-                segment.Lines.Add(new CurrencyLine(gold, silver, copper));
+                section.Lines.Add(new CurrencyLine(gold, silver, copper));
             }
 
-            return segment;
+            return section;
         }
 
         public Image<Rgba32> GetIcon(IItem target) => target.GetIcon().GetImage();

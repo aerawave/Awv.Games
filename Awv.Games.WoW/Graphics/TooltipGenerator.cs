@@ -33,14 +33,14 @@ namespace Awv.Games.WoW.Graphics
         public Rgba32 FillColor { get; set; }
 
         public Image<Rgba32> Generate<TTarget>(ITooltipProvider<TTarget> provider, TTarget target, float scale)
-            => Generate(provider.ShouldDrawIcon(target) ? provider.GetIcon(target) : null, provider.GetTitle(target), provider.GetSegments(target).ToArray(), scale);
+            => Generate(provider.ShouldDrawIcon(target) ? provider.GetIcon(target) : null, provider.GetTitle(target), provider.GetSections(target).ToArray(), scale);
 
         public Image<Rgba32> Generate(ITooltipProvider provider, float scale)
-            => Generate(provider.ShouldDrawIcon() ? provider.GetIcon() : null, provider.GetTitle(), provider.GetSegments().ToArray(), scale);
+            => Generate(provider.ShouldDrawIcon() ? provider.GetIcon() : null, provider.GetTitle(), provider.GetSections().ToArray(), scale);
 
-        private Image<Rgba32> Generate(Image<Rgba32> icon, TooltipText title, ITooltipSection[] segments, float scale)
+        private Image<Rgba32> Generate(Image<Rgba32> icon, TooltipText title, ITooltipSection[] sections, float scale)
         {
-            var linesQuery = segments.SelectMany(segment => segment.GetLines());
+            var linesQuery = sections.SelectMany(section => section.GetLines());
             if (FontFamily == null)
                 FontFamily = SystemFonts.Families.First(family => family.Name == "Verdana");
 
