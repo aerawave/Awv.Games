@@ -19,22 +19,9 @@ namespace ExampleProject
     {
         public static void Main(string[] args)
         {
-            GenerateWeapons();
-            return;
             Console.WriteLine("Please select a method to run.");
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
-        }
-
-        static decimal GetDPS(ItemLevel ilvl, ItemRarity rarity)
-        {
-            var calculatedLevel = ilvl.CalculateLevel(rarity);
-            return calculatedLevel - (decimal)(calculatedLevel * (.86 - (calculatedLevel > 160 ? ((double)(calculatedLevel - 160) / ItemLevel.ArbitraryTurnover) : 0)));
-        }
-
-        static void GenerateWeapons()
-        {
-            GenerateWeaponsProgram.Run();
         }
 
         /// <summary>
