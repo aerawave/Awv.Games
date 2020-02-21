@@ -11,14 +11,15 @@ Then enables exporting of that data (for instance, in the case of items)
 https://wow.tools/ literally made this entire Awv.Games.WoW project possible.</Description>
     <RepositoryUrl>https://github.com/aerawave/Awv.Games</RepositoryUrl>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
-    <PackageReleaseNotes>Couple of small fixes here and there.</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Odd issue with packages. Updated package references.</PackageReleaseNotes>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="15.0.0" />
     <PackageReference Include="libwarcraft" Version="3.0.0-alpha1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
   </ItemGroup>
 
 </Project>
