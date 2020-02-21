@@ -195,9 +195,9 @@ namespace Awv.Games.WoW.Tooltips
             var sellPrice = item.GetSellPrice();
             if (sellPrice != null)
             {
-                var gold = sellPrice.GetAmount("g");
-                var silver = sellPrice.GetAmount("s");
-                var copper = sellPrice.GetAmount("c");
+                var gold = (int?)sellPrice.GetAmount("g") ?? 0;
+                var silver = (int?)sellPrice.GetAmount("s") ?? 0;
+                var copper = (int?)sellPrice.GetAmount("c") ?? 0;
                 section.Lines.Add(new CurrencyLine(gold, silver, copper));
             }
 

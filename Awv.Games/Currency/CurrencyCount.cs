@@ -33,6 +33,6 @@ namespace Awv.Games.Currency
         }
 
         public Count<CurrencyUnit> GetAmount(string nameOrSymbol)
-            => this.First(ct => ct.Value.Name == nameOrSymbol || ct.Value.Symbol == nameOrSymbol);
+            => this.FirstOrDefault(ct => ct.Value.Name == nameOrSymbol || ct.Value.Symbol == nameOrSymbol);
     }
 }
