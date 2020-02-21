@@ -8,9 +8,9 @@
     <Description>Awv.Games is a set of libraries geared toward making content which is intended to simulate things found in various games.</Description>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <RepositoryUrl>https://github.com/aerawave/Awv.Games</RepositoryUrl>
-    <PackageReleaseNotes>Couple of small fixes here and there.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated CurrencyCount.GetAmount, as it would error if value was null.</PackageReleaseNotes>
     <PackageTags>aerawave</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

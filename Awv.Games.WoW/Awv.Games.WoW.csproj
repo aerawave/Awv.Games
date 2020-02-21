@@ -9,12 +9,12 @@
     <RepositoryType></RepositoryType>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <PackageTags>aerawave wow world of warcraft</PackageTags>
-    <PackageReleaseNotes>Updated some methods in ItemLevel and Level.</PackageReleaseNotes>
-    <Version>1.0.5</Version>
+    <PackageReleaseNotes>Updated package reference to Awv.Games.Core, and also updated references to CurrencyCount.GetAmount.</PackageReleaseNotes>
+    <Version>1.0.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Awv.Games.Core" Version="1.0.0" />
+    <PackageReference Include="Awv.Games.Core" Version="1.0.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
   </ItemGroup>
