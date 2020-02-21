@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <PackageTags>aerawave wow world of warcraft</PackageTags>
     <PackageReleaseNotes>Updated package reference to Awv.Games.Core, and also updated references to CurrencyCount.GetAmount.</PackageReleaseNotes>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
   </PropertyGroup>
 
   <ItemGroup>
