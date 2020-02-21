@@ -9,9 +9,9 @@
     <PackageReference Include="Awv.Automation.Generation" Version="1.0.2" />
     <PackageReference Include="Awv.Automation.Lexica" Version="1.0.4" />
     <PackageReference Include="Awv.Automation.SocialMedia" Version="1.0.2" />
-    <PackageReference Include="Awv.Games.Core" Version="1.0.2" />
-    <PackageReference Include="Awv.Games.WoW" Version="1.0.7" />
-    <PackageReference Include="Awv.Games.WoW.Data" Version="1.0.1" />
+    <PackageReference Include="Awv.Games.Core" Version="1.0.3" />
+    <PackageReference Include="Awv.Games.WoW" Version="1.0.8" />
+    <PackageReference Include="Awv.Games.WoW.Data" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
