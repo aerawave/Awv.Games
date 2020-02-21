@@ -14,7 +14,7 @@
         /// <summary>
         /// Set this to where you want your BLP files to be converted to PNGs, as well as where you want the PNGs to be pulled from.
         /// </summary>
-        public const string BlizzardInterfaceArt = @"\\awvserv\Apps\Data\BlizzardInterfaceArt";
+        public const string BlizzardInterfaceArt = null;
         public const string Interface = BlizzardInterfaceArt + "/Interface";
         public const string Icons = Interface + "/ICONS";
         public const string Tooltips = Interface + "/Tooltips";
@@ -29,6 +29,6 @@
         /// <summary>
         /// Set this to where your files exported from wow.tools are located.
         /// </summary>
-        public const string DatabaseDirectory = @"\\awvserv\Apps\Data\Exported (wow.tools)";
+        public const string DatabaseDirectory = null;
     }
 }
