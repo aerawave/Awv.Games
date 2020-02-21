@@ -22,15 +22,14 @@ namespace ExampleProject
 
         static TooltipGenerators()
         {
-            string blizzardInterfaceArtDirectory = null;
-
-            var fillFolder = Path.Combine(Directory.GetCurrentDirectory(), @"Assets\Tooltips");
-            var borderFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\Tooltips");
-            var corruptedItemsFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\CorruptedItems");
-            var currencyFolder = Path.Combine(blizzardInterfaceArtDirectory, @"Interface\MONEYFRAME");
-            var currencyName = "UI-MoneyIcons.png";
+            var fillFolder = Paths.TooltipFills;
+            var borderFolder = Paths.Tooltips;
+            var corruptedItemsFolder = Path.Combine(Paths.BlizzardInterfaceArt, @"Interface\CorruptedItems");
             var corruptedEmblemName = "CorruptedTooltip.png";
+            var corruptedEmblemPath = Path.Combine(corruptedItemsFolder, corruptedEmblemName);
 
+            var currencyFolder = Path.Combine(Paths.BlizzardInterfaceArt, @"Interface\MONEYFRAME");
+            var currencyName = "UI-MoneyIcons.png";
             var currencyPath = Path.Combine(currencyFolder, currencyName);
 
             DefaultGenerator.Border.Load(Path.Combine(borderFolder, "UI-Tooltip-Border.png"), 16);
@@ -43,7 +42,7 @@ namespace ExampleProject
             CorruptedGenerator.FillColor = TooltipColors.FillCorrupted;
             CorruptedGenerator.Currency.Load(currencyPath, 16);
 
-            var corruptedEmblem = Image.Load<Rgba32>(Path.Combine(corruptedItemsFolder, corruptedEmblemName));
+            var corruptedEmblem = Image.Load<Rgba32>(corruptedEmblemPath);
             corruptedEmblem.Mutate(x => x.Crop(new Rectangle(12, 0, 76, 29)));
 
             CorruptedGenerator.Emblem = corruptedEmblem;

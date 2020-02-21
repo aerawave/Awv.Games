@@ -19,9 +19,22 @@ namespace ExampleProject
     {
         public static void Main(string[] args)
         {
+            GenerateWeapons();
+            return;
             Console.WriteLine("Please select a method to run.");
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
+        }
+
+        static decimal GetDPS(ItemLevel ilvl, ItemRarity rarity)
+        {
+            var calculatedLevel = ilvl.CalculateLevel(rarity);
+            return calculatedLevel - (decimal)(calculatedLevel * (.86 - (calculatedLevel > 160 ? ((double)(calculatedLevel - 160) / ItemLevel.ArbitraryTurnover) : 0)));
+        }
+
+        static void GenerateWeapons()
+        {
+            GenerateWeaponsProgram.Run();
         }
 
         /// <summary>
@@ -33,14 +46,10 @@ namespace ExampleProject
         /// </summary>
         static void UpdateArtwork()
         {
-            // Set blpDirectory to your BlizzardInterfaceArt directory
-            string blpDirectory = null;
-            // Set pngDirectory to where you want to output PNG files.
-            var pngDirectory = Path.Combine(Directory.GetCurrentDirectory(), "BlizzardInterfaceArt");
             // Create an ArtworkUpdater.
             // The "updater.json" is a config file used to track where the updater is.
             // Used in the event that you need to pause the operation and resume it later.
-            var updater = new ArtworkUpdater("updater.json", blpDirectory, pngDirectory);
+            var updater = new ArtworkUpdater("updater.json", Paths.BLP_BlizzardInterfaceArt, Paths.BlizzardInterfaceArt);
             // Start it! It will log process as it goes, as well as report any errors to the aforementioned JSON file.
             updater.Start();
         }
@@ -87,9 +96,7 @@ namespace ExampleProject
         static void ExportItemData()
         {
             // Takes some time....
-            string databaseDirectory = null;
-
-            var database = CreateItemDatabase(databaseDirectory);
+            var database = CreateItemDatabase(Paths.DatabaseDirectory);
             var weaponTypesPath = Path.Combine(Directory.GetCurrentDirectory(), "export/weapon-types.json");
             var iconUsageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "export/Icon Usage");
             var format = ExportFormat.PlainText;
@@ -98,7 +105,7 @@ namespace ExampleProject
             // As a result, this is included in both of the following exports. Can be completely ignored or removed.
 
             ExportWeaponTypesJson(database, weaponTypesPath);
-            ExportWeaponIconUsageData(database, iconUsageDirectory, format);
+            ExportIconUsageData(database, iconUsageDirectory, format);
         }
 
         static void CustomWoWItems()
