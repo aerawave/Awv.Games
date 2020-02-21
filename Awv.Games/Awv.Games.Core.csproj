@@ -8,14 +8,14 @@
     <Description>Awv.Games is a set of libraries geared toward making content which is intended to simulate things found in various games.</Description>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <RepositoryUrl>https://github.com/aerawave/Awv.Games</RepositoryUrl>
-    <PackageReleaseNotes>Updated CurrencyCount.GetAmount, as it would error if value was null.</PackageReleaseNotes>
+    <PackageReleaseNotes>Had to downgrade ImageSharp, as libwarcraft had problems with the latest beta of it.</PackageReleaseNotes>
     <PackageTags>aerawave</PackageTags>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Awv.Automation.Generation" Version="1.0.2" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
   </ItemGroup>
 
 </Project>

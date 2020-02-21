@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
 using System.Linq;
@@ -84,7 +83,6 @@ namespace Awv.Games.WoW.Data.Artwork
 
                     var blp = new BLP(reader.ReadBytes((int)blpFile.Length));
                     var png = blp.GetBestMipMap(Math.Max(blp.Header.Resolution.X, blp.Header.Resolution.Y));
-
                     png.SaveAsPng(pngFile);
                 }
                 catch(Exception exception)

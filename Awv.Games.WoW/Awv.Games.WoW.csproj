@@ -9,14 +9,14 @@
     <RepositoryType></RepositoryType>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
     <PackageTags>aerawave wow world of warcraft</PackageTags>
-    <PackageReleaseNotes>Updated package reference to Awv.Games.Core, and also updated references to CurrencyCount.GetAmount.</PackageReleaseNotes>
-    <Version>1.0.7</Version>
+    <PackageReleaseNotes>Had to downgrade ImageSharp, as libwarcraft had problems with the latest beta of it.</PackageReleaseNotes>
+    <Version>1.0.8</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Awv.Games.Core" Version="1.0.2" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
+    <PackageReference Include="Awv.Games.Core" Version="1.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
   </ItemGroup>
 
   <ItemGroup>

@@ -85,7 +85,7 @@ namespace Awv.Games.WoW.Items
                 return tt;
             }
         }
-        public Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale, IBrush background)
+        public Image<Rgba32> GenerateTooltip(TooltipGenerator generator, float scale, IBrush<Rgba32> background)
         {
             var tt = GenerateTooltip(generator, scale);
 
