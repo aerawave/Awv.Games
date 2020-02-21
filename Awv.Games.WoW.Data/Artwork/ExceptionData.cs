@@ -8,7 +8,10 @@ namespace Awv.Games.WoW.Data.Artwork
         public string File { get; set; }
         public string ExceptionMessage { get; set; }
 
+        public ExceptionData() { }
+
         public ExceptionData(uint index, string file, string exceptionMessage)
+            : this()
         {
             Index = index;
             File = file;

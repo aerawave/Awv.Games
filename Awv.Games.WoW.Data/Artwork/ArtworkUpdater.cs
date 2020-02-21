@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
 using System.Linq;

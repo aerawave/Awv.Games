@@ -11,8 +11,8 @@ Then enables exporting of that data (for instance, in the case of items)
 https://wow.tools/ literally made this entire Awv.Games.WoW project possible.</Description>
     <RepositoryUrl>https://github.com/aerawave/Awv.Games</RepositoryUrl>
     <PackageProjectUrl>https://github.com/aerawave/Awv.Games</PackageProjectUrl>
-    <PackageReleaseNotes>Odd issue with packages. Updated package references.</PackageReleaseNotes>
-    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Part 2 of the odd package issue.</PackageReleaseNotes>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@ https://wow.tools/ literally made this entire Awv.Games.WoW project possible.</D
     <PackageReference Include="libwarcraft" Version="3.0.0-alpha1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
   </ItemGroup>
 
 </Project>
