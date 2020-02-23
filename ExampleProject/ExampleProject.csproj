@@ -15,28 +15,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.automation.lexica\1.0.1\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.automation.lexica\1.0.1\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.automation.lexica\1.0.1\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.automation.lexica\1.0.1\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.automation.lexica\1.0.2\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.automation.lexica\1.0.2\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.automation.lexica\1.0.2\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.automation.lexica\1.0.2\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.automation.lexica\1.0.4\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.automation.lexica\1.0.4\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.automation.lexica\1.0.4\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.automation.lexica\1.0.4\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.lexica\1.0.9\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.lexica\1.0.9\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="C:\Users\jaxki\.nuget\packages\awv.lexica\1.0.9\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
+    <Content Update="C:\Users\$(USERNAME)\.nuget\packages\awv.lexica\1.0.9\contentFiles\any\netcoreapp3.1\V8_Net_Proxy_x86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
